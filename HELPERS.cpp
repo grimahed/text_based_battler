@@ -1,46 +1,139 @@
 #include <iostream>
 #include "PLAYER.h"
 #include <string>
+#include <string.h>
+#include <ctype.h>
+#include <string_view>
+#include <list>
 using namespace std;
 
-
-void get_player_name()
+bool only_whitespace(std::string_view str) //HOW DID I NOT NOTICE THE == SHOULD BE != UNTIL NOW. SMADGE
 {
-player_t player;
-std::string input;
-std::string text_error = "Where's my valid TEXT";
-std::cout << "Enter the name for your character: ";
-std::getline(cin, player.input);
-    if (player.input.empty()){
-    cout << "The default name is Grimahed, is that okay (y/n)?" << std::endl;
-    std::cout << "" << endl;
-    std::getline(cin, player.input);
-        if (player.input == "y" || player.input == "Y" || player.input == "yes") {
-            player.name = "Grimahed";
-            cout << "Your name is: " << player.name << std::endl;
-        } else if (player.input == "n" || player.input == "N" || player.input == "no"){
-            get_player_name();
+    size_t length = str.size();
+    std::string str_char_dump = "";
+    for (size_t i = 0; i < length; i++)
+    {
+        if (str[i] == ' '){
+            str_char_dump += str[i];
         }
-    } else {
-        player.name = input;
-        cout << "Your name is: " << player.name << std::endl;
     }
-    }
-    
-void class_abilities()
-{
-Class<std::string> w_skills{"Mortal Strike", "Overpower", "Execute", "Rend"};
-std::cout << w_skills.Warrior[0];
-Class<std::string> m_skills{"Ice bolt", "Fireball", "Thunder", "Quake"};
-Class<std::string> r_skills{"Slice and Dice", "Kick", "Gash", "Poison Strike"};
-Class<std::string> wm_skills{"Aero", "Cure", "Holy", "Dia"};
+    if (str_char_dump.size() != 0){
+        return true;
+    } 
+    return false;
 }
 
-std::string get_ability_used(std::string arg)
+
+
+std::string get_player_name()
+{
+    std::string input;
+    std::string text_error = "Where's my valid TEXT";
+    /*std::cout << "Enter the name for your character: ";
+    std::getline(cin, input);
+    size_t name_length = input.size();*/
+    
+    //checks
+    cout << "The default name is Grimahed, is that okay (y/n)?" << std::endl;
+    std::getline(cin, input);
+        if (input == "y" || input == "Y" || input == "yes") {
+            input = "Grimahed";
+            cout << "Your name is: " << input << std::endl;
+        } else if (input == "n" || input == "N" || input == "no")
+        {
+        std::cout << "Enter the name for your character: ";
+        std::getline(cin, input);
+        size_t name_length = input.size();
+            if (only_whitespace(input))
+            {
+                cout << "" << text_error << endl;
+                get_player_name();
+            } else {
+                cout << "Your name is: " << input << "\n" << "----------------------------------" << "\n";
+            }
+        }
+    return input;
+}
+
+PCLASSES get_class(Player* player)
+{
+    std::string user_input;
+    cout << "Select from the following classes:" << "\n";
+    cout << "Warrior, Mage, Rogue, Warlock, Priest" << "\n" << "----------------------------------" << "\n";
+    std::cout << "" << std::endl;
+    std::getline(cin, user_input);
+
+    if (user_input == "Warrior" || user_input == "warrior") {
+        player->kind = PCLASSES::WARRIOR;
+    }
+    else if (user_input == "Mage" || user_input == "mage") {
+        player->kind = PCLASSES::MAGE;
+    }
+    else if (user_input == "Rogue" || user_input == "rogue") {
+        player->kind = PCLASSES::ROGUE;
+    }
+    else if (user_input == "Warlock" || user_input == "warlock") {
+        player->kind = PCLASSES::WARLOCK;
+    }
+    else if (user_input == "Priest" || user_input == "priest") {
+        player->kind = PCLASSES::PRIEST;
+    } else {
+        cout << "invalid input. Read my man, try again." << "\n" << "----------------------------------" << "\n";
+        get_class(player);
+    }
+
+    cout << "You have chosen: " << user_input << "\n" << "----------------------------------" << "\n";
+    return player->kind;
+}
+
+std::list<std::string> class_abilities(Player* player)
+{
+
+    switch (player->kind) {
+
+    case PCLASSES::WARRIOR:
+        player->ability_list = {"Mortal Strike", "Overpower", "Execute", "Rend"};
+        break;
+    
+    case PCLASSES::MAGE:
+        player->ability_list = {"Ice bolt", "Fireblast", "Thunder", "Ice Block"};
+        break;
+    
+    case PCLASSES::ROGUE:
+        player->ability_list = {"Slice and Dice", "Kick", "Saber Slash", "Poison Bomb"};
+        break;
+    
+    case PCLASSES::WARLOCK:
+        player->ability_list = {"Shadow Bolt", "Bone Decay", "Rain of Fire", "Summon Demon"};
+        break;
+    
+    case PCLASSES::PRIEST:
+        player->ability_list = {"Heal", "Dia", "Holy", "Aero"};
+        break;
+    }
+    return player->ability_list;
+    }
+
+
+int print_abilities(Player player) {
+    std::string message = "";
+    for (auto i = player.ability_list.begin(); i != player.ability_list.end(); i++)
+    {
+        if (i != player.ability_list.begin()) {
+            message += ", ";
+        }
+        message += *i;
+    }
+    cout << "Your abilities are:" << endl;
+    cout << "" << message << endl;
+    return 0;
+}
+
+/*std::string get_ability_used(std::string arg)
 {
 player_t player;
 std::string input = arg;
 player.input = input;
 
 return player.input;
-}
+}*/
