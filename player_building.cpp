@@ -1,3 +1,5 @@
+#ifndef PLAYER_BUILDING_CPP
+#define PLAYER_BUILDING_CPP
 #include <iostream>
 #include "PLAYER.h"
 #include <string>
@@ -7,7 +9,7 @@
 #include <list>
 using namespace std;
 
-bool only_whitespace(std::string_view str) //HOW DID I NOT NOTICE THE == SHOULD BE != UNTIL NOW. SMADGE
+bool only_whitespace(std::string_view str)
 {
     size_t length = str.size();
     std::string str_char_dump = "";
@@ -17,23 +19,18 @@ bool only_whitespace(std::string_view str) //HOW DID I NOT NOTICE THE == SHOULD 
             str_char_dump += str[i];
         }
     }
-    if (str_char_dump.size() != 0){
+    if (str_char_dump.size() == length){
         return true;
     } 
     return false;
 }
-
+//=============================================================
 
 
 std::string get_player_name()
 {
     std::string input;
     std::string text_error = "Where's my valid TEXT";
-    /*std::cout << "Enter the name for your character: ";
-    std::getline(cin, input);
-    size_t name_length = input.size();*/
-    
-    //checks
     cout << "The default name is Grimahed, is that okay (y/n)?" << std::endl;
     std::getline(cin, input);
         if (input == "y" || input == "Y" || input == "yes") {
@@ -51,6 +48,9 @@ std::string get_player_name()
             } else {
                 cout << "Your name is: " << input << "\n" << "----------------------------------" << "\n";
             }
+        } else {
+            cout << "invalid input." << "\n================================\n";
+            get_player_name();
         }
     return input;
 }
@@ -114,8 +114,7 @@ std::list<std::string> class_abilities(Player* player)
     return player->ability_list;
     }
 
-
-int print_abilities(Player player) {
+std::string print_abilities(Player player) {
     std::string message = "";
     for (auto i = player.ability_list.begin(); i != player.ability_list.end(); i++)
     {
@@ -124,16 +123,7 @@ int print_abilities(Player player) {
         }
         message += *i;
     }
-    cout << "Your abilities are:" << endl;
-    cout << "" << message << endl;
-    return 0;
+    return message;
 }
 
-/*std::string get_ability_used(std::string arg)
-{
-player_t player;
-std::string input = arg;
-player.input = input;
-
-return player.input;
-}*/
+#endif

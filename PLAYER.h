@@ -3,15 +3,6 @@
 #include <string>
 #include <list>
 
-enum class PCLASSES;
-
-struct Player
-{
-    std::string name;
-    std::list<std::string> ability_list;
-    PCLASSES kind;
-};
-
 enum class PCLASSES
 {
     WARRIOR,
@@ -21,13 +12,27 @@ enum class PCLASSES
     PRIEST,
 };
 
+enum class W_SKILLS {MORTAL_STRIKE, OVERPOWER, EXECUTE, REND};
+enum class M_SKILLS {ICE_BOLT, FIREBLAST, THUNDER, ICE_BLOCK};
+enum class R_SKILLS {SLICE_AND_DICE, KICK, SABER_SLASH, POISON_BOMB};
+enum class WL_SKILLS {SHADOW_BOLT, BONE_DECAY, RAIN_OF_FIRE, SUMMON_DEMON};
+enum class P_SKILLS {HEAL, DIA, HOLY, AERO};
 
-/*union class_skills {
-    std::list<std::string> w_skills;
-    std::list<std::string> m_skills;
-    std::string r_skills;
-    std::string wl_skills;
-    std::string wm_skills;
-};*/
+struct Player
+{
+    bool is_alive;
+
+    std::string input;
+    std::string name;
+    std::list<std::string> ability_list;
+    PCLASSES kind;
+
+    //ability stuff
+    W_SKILLS w_ability;
+    M_SKILLS m_ability;
+    R_SKILLS r_ability;
+    WL_SKILLS wl_ability;
+    P_SKILLS p_ability;
+};
 
 #endif
