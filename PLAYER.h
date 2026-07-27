@@ -12,6 +12,15 @@ enum class PCLASSES
     PRIEST,
 };
 
+struct p_stats
+{
+    int HP;
+    int STR;
+    int DEX;
+    int INT;
+    int WIS;
+};
+
 enum class W_SKILLS {MORTAL_STRIKE, OVERPOWER, EXECUTE, REND};
 enum class M_SKILLS {ICE_BOLT, FIREBLAST, THUNDER, ICE_BLOCK};
 enum class R_SKILLS {SLICE_AND_DICE, KICK, SABER_SLASH, POISON_BOMB};
@@ -24,8 +33,9 @@ struct Player
 
     std::string input;
     std::string name;
-    std::list<std::string> ability_list;
     PCLASSES kind;
+    p_stats stats;
+    std::list<std::string> ability_list;
 
     //ability stuff
     W_SKILLS w_ability;

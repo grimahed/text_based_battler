@@ -14,12 +14,13 @@ W_SKILLS get_warrior_skill_used(Player* player)
     if (player->kind != PCLASSES::WARRIOR) {
         exit(1);
     }
-    cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
+    cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "=========================================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
-        cout << "Do you *want* to die?\n" << "==========================" << endl;
+        cout << "Do you *want* to die?\n" << "=========================================" << endl;
         get_warrior_skill_used(player);
     }
     else if (player->input == "mortal strike")
@@ -49,6 +50,7 @@ M_SKILLS get_mage_skill_used(Player* player)
     cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "==========================" << endl;
@@ -81,6 +83,7 @@ R_SKILLS get_rogue_skill_used(Player* player)
     cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "==========================" << endl;
@@ -113,6 +116,7 @@ WL_SKILLS get_warlock_skill_used(Player* player)
     cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "==========================" << endl;
@@ -145,6 +149,7 @@ P_SKILLS get_priest_skill_used(Player* player)
     cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "==========================" << endl;
@@ -175,25 +180,29 @@ int calc_damage(Player* player)
     int damage = 0;
     switch (player->kind)
     {
+
+        //WHY use dex or stats that won't be used later?
+        //wait for later commits >:( They will be used while leveling if I implement it.
         case PCLASSES::WARRIOR:
+            get_stats(player);
             get_warrior_skill_used(player);
             switch (player->w_ability)
             {
                 case W_SKILLS::MORTAL_STRIKE:
-                    damage = 15 * 3;
-                    break;
+                    damage = (player->stats.STR + player->stats.DEX) * 3;
+                    break;                              
                 
                 case W_SKILLS::OVERPOWER:
-                    damage = 10 * 3;
+                    damage = (player->stats.STR + (player->stats.DEX / 3)) * 3;
                     break;
                 
                 case W_SKILLS::EXECUTE:
-                    damage = 15 * 5;
+                    damage = (player->stats.STR + player->stats.DEX) * 5;
                     break;
-                
+                //What's the point of the others then? Wait for future commit (mob implementation). IFYKYK.
                 case W_SKILLS::REND:
-                    damage = 10 * 2;
-                    break;
+                    damage = (player->stats.STR + (player->stats.DEX * .8)) * 2;
+                    break; //Will be a DoT. another IFYKYK.
                 default:
                     cout << "unexpected error. oopsie~" << endl;
                     break;
@@ -201,22 +210,22 @@ int calc_damage(Player* player)
             break; //WARRIOR CASE BREAK
 
         case PCLASSES::MAGE:
+            get_stats(player);
             get_mage_skill_used(player);
             switch (player->m_ability)
             {
                 case M_SKILLS::ICE_BOLT:
-                damage = 15 * 3;
+                damage = (player->stats.INT + player->stats.WIS) * 2;
                 break;
 
                 case M_SKILLS::FIREBLAST:
-                damage = 15 * 3;
+                damage = (player->stats.INT + (player->stats.WIS * .6)) * 3;
                 break;
                 
                 case M_SKILLS::THUNDER:
-                damage = 15 * 3;
+                damage = (player->stats.INT + (player->stats.WIS * .8)) * 2;
                 break;
-                //but GRIIIIIM why have separate spells if they deal the same damage?!?
-                //WAIT FOR FUTURE COMMITS >:(
+                //I got to this a lot faster than I expected, here's that commit(tm) you requested
                 case M_SKILLS::ICE_BLOCK:
                 damage = 0;
                 break;
@@ -227,24 +236,25 @@ int calc_damage(Player* player)
             break; //MAGE CASE BREAK
 
             case PCLASSES::ROGUE:
+            get_stats(player);
             get_rogue_skill_used(player);
             switch (player->r_ability)
             {
                 case R_SKILLS::SLICE_AND_DICE:
-                    damage = 15 * 3;
-                    break;
+                    damage = (player->stats.DEX + (player->stats.STR * .2)) * 4;
+                    break; //trying to emulate multiple slashes with one calc. Might try to make it ACTUALLY multiple later.
                 
                 case R_SKILLS::KICK:
-                    damage = 10 * 3;
-                    break;
+                    damage = (player->stats.DEX + (player->stats.STR * .2)) * 2;
+                    break; //yes this will be a stun. Again, IFYKYK.
                 
                 case R_SKILLS::SABER_SLASH:
-                    damage = 15 * 3;
+                    damage = (player->stats.DEX + player->stats.STR) * 3;
                     break;
                 
                 case R_SKILLS::POISON_BOMB:
-                    damage = 10 * 2;
-                    break;
+                    damage = (player->stats.DEX + (player->stats.STR * .8)) * 2;
+                    break; //anotha DoT
                 default:
                     cout << "unexpected error. oopsie~" << endl;
                     break;
@@ -252,23 +262,24 @@ int calc_damage(Player* player)
             break; //ROGUE CASE BREAK
 
             case PCLASSES::WARLOCK:
+            get_stats(player);
             get_warlock_skill_used(player);
             switch (player->wl_ability)
             {
                 case WL_SKILLS::SHADOW_BOLT:
-                    damage = 15 * 3;
+                    damage = (player->stats.INT + (player->stats.WIS / 2)) * 3;
                     break;
                 
                 case WL_SKILLS::BONE_DECAY:
-                    damage = 15 * 2;
-                    break;
+                    damage = (player->stats.INT + (player->stats.WIS * .8)) * 2;
+                    break; //DoT
                 
                 case WL_SKILLS::RAIN_OF_FIRE:
-                    damage = 15 * 2;
+                    damage = (player->stats.INT + player->stats.WIS) * 2;
                     break;
                 
                 case WL_SKILLS::SUMMON_DEMON:
-                    damage = 15 * 5;
+                    damage = (player->stats.INT + (player->stats.WIS)) * 5;
                     break;
                 default:
                     cout << "unexpected error. oopsie~" << endl;
@@ -277,6 +288,7 @@ int calc_damage(Player* player)
             break; //WARLOCK CASE BREAK
 
             case PCLASSES::PRIEST:
+            get_stats(player);
             get_priest_skill_used(player);
             switch (player->p_ability)
             {
@@ -285,15 +297,15 @@ int calc_damage(Player* player)
                     break;
                 
                 case P_SKILLS::DIA:
-                    damage = 15 * 3;
-                    break;
+                    damage = (player->stats.WIS + (player->stats.INT * .8)) * 2;
+                    break; //DoT
                 
                 case P_SKILLS::HOLY:
-                    damage = 15 * 2;
+                    damage = (player->stats.WIS + (player->stats.INT * .4)) * 2;
                     break;
                 
                 case P_SKILLS::AERO:
-                    damage = 15 * 3;
+                    damage = (player->stats.WIS + (player->stats.INT / 2)) * 3;
                     break;
                 default:
                     cout << "unexpected error. oopsie~" << endl;
@@ -304,7 +316,7 @@ int calc_damage(Player* player)
         cout << "No valid class was selected or some jank happened that made it fall through. Try ctrl+c and rerunning" << endl;
         break;
     }
-    return damage;
+    return (int)damage;
 }
 
 

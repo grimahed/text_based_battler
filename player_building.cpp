@@ -59,7 +59,7 @@ PCLASSES get_class(Player* player)
 {
     std::string user_input;
     cout << "Select from the following classes:" << "\n";
-    cout << "Warrior, Mage, Rogue, Warlock, Priest" << "\n" << "----------------------------------" << "\n";
+    cout << "Warrior, Mage, Rogue, Warlock, Priest" << "\n" << "=========================================" << "\n";
     std::cout << "" << std::endl;
     std::getline(cin, user_input);
 
@@ -78,14 +78,61 @@ PCLASSES get_class(Player* player)
     else if (user_input == "Priest" || user_input == "priest") {
         player->kind = PCLASSES::PRIEST;
     } else {
-        cout << "invalid input. Read my man, try again." << "\n" << "----------------------------------" << "\n";
+        cout << "invalid input. Read my man, try again." << "\n" << "=========================================" << "\n";
         get_class(player);
     }
-
-    cout << "You have chosen: " << user_input << "\n" << "----------------------------------" << "\n";
     return player->kind;
 }
 
+p_stats get_stats(Player* player)
+{
+    switch (player->kind)
+    {
+        case PCLASSES::WARRIOR:
+            player->stats.HP = 400;
+            player->stats.STR = 15;
+            player->stats.DEX = 10; //but don't anyone you leveled it
+            player->stats.INT = 8;
+            player->stats.WIS = 8;
+            break;
+
+        case PCLASSES::MAGE:
+            player->stats.HP = 275;
+            player->stats.STR = 9;
+            player->stats.DEX = 9;
+            player->stats.INT = 15;
+            player->stats.WIS = 12;
+            break;
+        
+        case PCLASSES::ROGUE:
+            player->stats.HP = 325;
+            player->stats.STR = 10;
+            player->stats.DEX = 15;
+            player->stats.INT = 11; //what's the point of giving classes stats they don't use?
+            player->stats.WIS = 8;  //lol, lmao.
+            break;
+
+        case PCLASSES::WARLOCK:
+            player->stats.HP = 275;
+            player->stats.STR= 8;
+            player->stats.DEX = 10;
+            player->stats.INT = 17;
+            player->stats.WIS = 10;
+            break;
+
+        case PCLASSES::PRIEST:
+            player->stats.HP = 250;
+            player->stats.STR = 8;
+            player->stats.DEX = 10;
+            player->stats.INT = 10;
+            player->stats.WIS = 17;
+            break;
+        
+        default:
+        break;
+    }
+    return player->stats;
+}
 std::list<std::string> class_abilities(Player* player)
 {
 
@@ -114,6 +161,73 @@ std::list<std::string> class_abilities(Player* player)
     return player->ability_list;
     }
 
+void print_class_info(Player* player)
+{
+    switch (player->kind)
+    {
+        case PCLASSES::WARRIOR:
+            get_stats(player);
+            cout << "You have chosen Warrior" << "\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << player->stats.HP << "\n";
+            cout << "STR: " << player->stats.STR << "\n";
+            cout << "DEX: " << player->stats.DEX << "\n";
+            cout << "INT: " << player->stats.INT << "\n";
+            cout << "WIS: " << player->stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        
+        case PCLASSES::MAGE:
+            get_stats(player);
+            cout << "You have chosen Mage" << "\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << player->stats.HP << "\n";
+            cout << "STR: " << player->stats.STR << "\n";
+            cout << "DEX: " << player->stats.DEX << "\n";
+            cout << "INT: " << player->stats.INT << "\n";
+            cout << "WIS: " << player->stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        
+        case PCLASSES::ROGUE:
+            get_stats(player);
+            cout << "You have chosen Rogue" << "\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << player->stats.HP << "\n";
+            cout << "STR: " << player->stats.STR << "\n";
+            cout << "DEX: " << player->stats.DEX << "\n";
+            cout << "INT: " << player->stats.INT << "\n";
+            cout << "WIS: " << player->stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        
+        case PCLASSES::WARLOCK:
+            get_stats(player);
+            cout << "You have chosen Warlock" << "\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << player->stats.HP << "\n";
+            cout << "STR: " << player->stats.STR << "\n";
+            cout << "DEX: " << player->stats.DEX << "\n";
+            cout << "INT: " << player->stats.INT << "\n";
+            cout << "WIS: " << player->stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        
+        case PCLASSES::PRIEST:
+            get_stats(player);
+            cout << "You have chosen Priest" << "\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << player->stats.HP << "\n";
+            cout << "STR: " << player->stats.STR << "\n";
+            cout << "DEX: " << player->stats.DEX << "\n";
+            cout << "INT: " << player->stats.INT << "\n";
+            cout << "WIS: " << player->stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        default:
+            break;
+    }
+}
 std::string print_abilities(Player player) {
     std::string message = "";
     for (auto i = player.ability_list.begin(); i != player.ability_list.end(); i++)
