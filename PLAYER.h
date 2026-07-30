@@ -2,6 +2,7 @@
 #define PLAYER_H
 #include <string>
 #include <list>
+#include "ZONES.h"
 
 enum class PCLASSES
 {
@@ -31,12 +32,15 @@ struct Player
 {
     bool is_alive;
 
+    int level;
+
     std::string input;
     std::string name;
     PCLASSES kind;
     p_stats stats;
     std::list<std::string> ability_list;
-
+    std::list<std::string> zone_list = {"Elwynn Forest", "Zoravia", "AREANAME3"};
+    ZONES current_zone;
     //ability stuff
     W_SKILLS w_ability;
     M_SKILLS m_ability;

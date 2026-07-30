@@ -1,8 +1,12 @@
+#ifndef DAMAGE_CALCS_CPP
+#define DAMAGE_CALCS_CPP
+
 #include <iostream>
 #include "PLAYER.h"
-#include "player_building.cpp"
 #include <string>
+#include "helpers.cpp"
 #include <string.h>
+#include <optional>
 #include <ctype.h>
 #include <string_view>
 #include <list>
@@ -14,7 +18,7 @@ W_SKILLS get_warrior_skill_used(Player* player)
     if (player->kind != PCLASSES::WARRIOR) {
         exit(1);
     }
-    cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "=========================================\n";
+    cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "=========================================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
     cout << "=========================================" << endl;
@@ -23,20 +27,20 @@ W_SKILLS get_warrior_skill_used(Player* player)
         cout << "Do you *want* to die?\n" << "=========================================" << endl;
         get_warrior_skill_used(player);
     }
-    else if (player->input == "mortal strike")
+    else if (player->input == "1")
     {
         player->w_ability = W_SKILLS::MORTAL_STRIKE;
     }
-    else if (player->input == "overpower"){
+    else if (player->input == "2"){
         player->w_ability = W_SKILLS::OVERPOWER;
     }
-    else if (player->input == "execute"){
+    else if (player->input == "3"){
         player->w_ability = W_SKILLS::EXECUTE;
     }
-    else if (player->input == "rend"){
+    else if (player->input == "4"){
         player->w_ability = W_SKILLS::REND;
     } else {
-        cout << "not an ability for Warrior" << endl;
+        cout << "not valid input" << endl;
         get_warrior_skill_used(player);
     }
     return player->w_ability;
@@ -47,7 +51,7 @@ M_SKILLS get_mage_skill_used(Player* player)
     if (player->kind != PCLASSES::MAGE) {
         exit(1);
     }
-    cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
+    cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
     cout << "=========================================" << endl;
@@ -56,20 +60,20 @@ M_SKILLS get_mage_skill_used(Player* player)
         cout << "Do you *want* to die?\n" << "==========================" << endl;
         get_mage_skill_used(player);
     }
-    else if (player->input == "ice bolt")
+    else if (player->input == "1")
     {
         player->m_ability = M_SKILLS::ICE_BOLT;
     }
-    else if (player->input == "fireblast"){
+    else if (player->input == "2"){
         player->m_ability = M_SKILLS::FIREBLAST;
     }
-    else if (player->input == "thunder"){
+    else if (player->input == "3"){
         player->m_ability = M_SKILLS::THUNDER;
     }
-    else if (player->input == "ice block"){
+    else if (player->input == "4"){
         player->m_ability = M_SKILLS::ICE_BLOCK;
     } else {
-        cout << "not an ability for Mage" << endl;
+        cout << "not valid input" << endl;
         get_mage_skill_used(player);
     }
     return player->m_ability;
@@ -80,7 +84,7 @@ R_SKILLS get_rogue_skill_used(Player* player)
     if (player->kind != PCLASSES::ROGUE) {
         exit(1);
     }
-    cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
+    cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
     cout << "=========================================" << endl;
@@ -89,20 +93,20 @@ R_SKILLS get_rogue_skill_used(Player* player)
         cout << "Do you *want* to die?\n" << "==========================" << endl;
         get_rogue_skill_used(player);
     }
-    else if (player->input == "slice and dice")
+    else if (player->input == "1")
     {
         player->r_ability = R_SKILLS::SLICE_AND_DICE;
     }
-    else if (player->input == "kick"){
+    else if (player->input == "2"){
         player->r_ability = R_SKILLS::KICK;
     }
-    else if (player->input == "saber slash"){
+    else if (player->input == "3"){
         player->r_ability = R_SKILLS::SABER_SLASH;
     }
-    else if (player->input == "poison bomb"){
+    else if (player->input == "4"){
         player->r_ability = R_SKILLS::POISON_BOMB;
     } else {
-        cout << "not an ability for Warrior" << endl;
+        cout << "not valid input" << endl;
         get_rogue_skill_used(player);
     }
     return player->r_ability;
@@ -113,7 +117,7 @@ WL_SKILLS get_warlock_skill_used(Player* player)
     if (player->kind != PCLASSES::WARLOCK) {
         exit(1);
     }
-    cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
+    cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
     cout << "=========================================" << endl;
@@ -122,20 +126,20 @@ WL_SKILLS get_warlock_skill_used(Player* player)
         cout << "Do you *want* to die?\n" << "==========================" << endl;
         get_warlock_skill_used(player);
     }
-    else if (player->input == "shadow bolt")
+    else if (player->input == "1")
     {
         player->wl_ability = WL_SKILLS::SHADOW_BOLT;
     }
-    else if (player->input == "bone decay"){
+    else if (player->input == "2"){
         player->wl_ability = WL_SKILLS::BONE_DECAY;
     }
-    else if (player->input == "rain of fire"){
+    else if (player->input == "3"){
         player->wl_ability = WL_SKILLS::RAIN_OF_FIRE;
     }
-    else if (player->input == "summon demon"){
+    else if (player->input == "4"){
         player->wl_ability = WL_SKILLS::SUMMON_DEMON;
     } else {
-        cout << "not an ability for Warlock" << endl;
+        cout << "not valid input" << endl;
         get_warlock_skill_used(player);
     }
     return player->wl_ability;
@@ -146,7 +150,7 @@ P_SKILLS get_priest_skill_used(Player* player)
     if (player->kind != PCLASSES::PRIEST) {
         exit(1);
     }
-    cout << "Select an ability to use from: " << print_abilities(*player) << "\n" << "==========================\n";
+    cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
     cout << "=========================================" << endl;
@@ -155,20 +159,20 @@ P_SKILLS get_priest_skill_used(Player* player)
         cout << "Do you *want* to die?\n" << "==========================" << endl;
         get_priest_skill_used(player);
     }
-    else if (player->input == "heal")
+    else if (player->input == "1")
     {
         player->p_ability = P_SKILLS::HEAL;
     }
-    else if (player->input == "dia"){
+    else if (player->input == "2"){
         player->p_ability = P_SKILLS::DIA;
     }
-    else if (player->input == "holy"){
+    else if (player->input == "3"){
         player->p_ability = P_SKILLS::HOLY;
     }
-    else if (player->input == "aero"){
+    else if (player->input == "4"){
         player->p_ability = P_SKILLS::AERO;
     } else {
-        cout << "not an ability for Priest" << endl;
+        cout << "not valid input" << endl;
         get_priest_skill_used(player);
     }
     return player->p_ability;
@@ -321,7 +325,7 @@ int calc_damage(Player* player)
 
 
 
-
+#endif
 
 
 //int deal_damage(int damage_dealt, int enemy_health);

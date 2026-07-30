@@ -3,27 +3,28 @@
 #include <iostream>
 #include "PLAYER.h"
 #include <string>
-#include <string.h>
+#include "helpers.cpp"
+#include <stdexcept>
+#include <optional>
 #include <ctype.h>
 #include <string_view>
 #include <list>
 using namespace std;
 
-bool only_whitespace(std::string_view str)
-{
-    size_t length = str.size();
-    std::string str_char_dump = "";
-    for (size_t i = 0; i < length; i++)
-    {
-        if (str[i] == ' '){
-            str_char_dump += str[i];
+
+/*std::string print_current_zone(Player player, std::string input) { //probably gonna homebrew a dynamic helper for this just for the hell of it
+    std::string message = "";                //"But you'll just essentially be copy pasting!...Yeah and? if it works it works."
+    for (auto i = player.zone_list.begin(); i != player.zone_list.end(); i++)  //:^)
+    {   
+        if (input == "1"){
+            
+            std::string message = "Your current zone is" + get_item(player.zone_list, 0);
         }
     }
-    if (str_char_dump.size() == length){
-        return true;
-    } 
-    return false;
 }
+    return message;*/ //probably not needed
+
+
 //=============================================================
 
 
@@ -81,6 +82,7 @@ PCLASSES get_class(Player* player)
         cout << "invalid input. Read my man, try again." << "\n" << "=========================================" << "\n";
         get_class(player);
     }
+    cout << "=========================================" << endl;
     return player->kind;
 }
 
@@ -133,6 +135,7 @@ p_stats get_stats(Player* player)
     }
     return player->stats;
 }
+
 std::list<std::string> class_abilities(Player* player)
 {
 
@@ -167,7 +170,7 @@ void print_class_info(Player* player)
     {
         case PCLASSES::WARRIOR:
             get_stats(player);
-            cout << "You have chosen Warrior" << "\n";
+            cout << "Class: Warrior" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
             cout << "STR: " << player->stats.STR << "\n";
@@ -179,7 +182,7 @@ void print_class_info(Player* player)
         
         case PCLASSES::MAGE:
             get_stats(player);
-            cout << "You have chosen Mage" << "\n";
+            cout << "Class: Mage" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
             cout << "STR: " << player->stats.STR << "\n";
@@ -191,7 +194,7 @@ void print_class_info(Player* player)
         
         case PCLASSES::ROGUE:
             get_stats(player);
-            cout << "You have chosen Rogue" << "\n";
+            cout << "Class: Rogue" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
             cout << "STR: " << player->stats.STR << "\n";
@@ -203,7 +206,7 @@ void print_class_info(Player* player)
         
         case PCLASSES::WARLOCK:
             get_stats(player);
-            cout << "You have chosen Warlock" << "\n";
+            cout << "Class: Warlock" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
             cout << "STR: " << player->stats.STR << "\n";
@@ -215,7 +218,7 @@ void print_class_info(Player* player)
         
         case PCLASSES::PRIEST:
             get_stats(player);
-            cout << "You have chosen Priest" << "\n";
+            cout << "Class: Priest" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
             cout << "STR: " << player->stats.STR << "\n";
@@ -228,16 +231,37 @@ void print_class_info(Player* player)
             break;
     }
 }
-std::string print_abilities(Player player) {
-    std::string message = "";
-    for (auto i = player.ability_list.begin(); i != player.ability_list.end(); i++)
-    {
-        if (i != player.ability_list.begin()) {
-            message += ", ";
-        }
-        message += *i;
-    }
-    return message;
-}
 
+ZONES get_zone(Player* player)
+{
+    std::string input;
+    cout << "Choose a zone from: " << print_list(player->zone_list) << endl;     //Yeah, i plan on numeric input because
+    std::cout << "" << std::endl;;                                               //Probs will make text an option though.      
+    std::getline(cin, input);
+    int num_imput = 0;                                         
+    if (input == "1"){
+        player->current_zone = ZONES::ELWYNN_FOREST;
+        cout << "=========================================" << endl;
+        cout << "Current Zone: " << get_item(player->zone_list, 0) << "\n" << endl;
+        return player->current_zone;
+    } else if (input == "2") {
+        player->current_zone = ZONES::ZORAVIA;
+        int num_input = std::stoi(input);
+        //cout << "Current Zone: " << get_item(player->zone_list, num_input) << endl; //these style prints lines are for debugging, btw
+        //cout << "=========================================" << endl;
+    } else if (input == "3") {
+        player->current_zone = ZONES::AREANAME3;
+        int num_input = std::stoi(input);
+        //cout << "Current Zone: " << get_item(player->zone_list, num_input) << endl; //these style prints lines are for debugging, btw
+        //cout << "=========================================" << endl;
+    } 
+    else {
+        cout << "Need valid input mans" << endl << "=========================================" << endl;
+        get_zone(player);
+    }
+    int num_input = std::stoi(input);
+    cout << "=========================================" << endl;
+    cout << "Current Zone: " << get_item(player->zone_list, num_input) << "\n" << endl;
+    return player->current_zone;
+}
 #endif
