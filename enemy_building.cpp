@@ -111,16 +111,15 @@ ENEMIES get_enemy(Player* player, Enemy* enemy, Zone* zone)
 
 en_stats get_enemy_stats(Enemy* enemy){
     using enum ENEMIES;
-
     switch (enemy->type)
     {
         case MURLOC:
 
-            enemy->e_stats.HP = 300;
+            enemy->e_stats.HP = 275;
             enemy->e_stats.STR = 12;
             enemy->e_stats.DEX = 12;
             enemy->e_stats.INT = 14;
-            enemy->e_stats.WIS = 14;
+            enemy->e_stats.WIS = 12;
             break;
         
         
@@ -152,10 +151,10 @@ en_stats get_enemy_stats(Enemy* enemy){
 
         case GREENGUARD_DRAGON:
             enemy->e_stats.HP = 700;
-            enemy->e_stats.STR = 20;
-            enemy->e_stats.DEX = 20;
-            enemy->e_stats.INT = 18;
-            enemy->e_stats.WIS = 18;
+            enemy->e_stats.STR = 24;
+            enemy->e_stats.DEX = 24;
+            enemy->e_stats.INT = 20;
+            enemy->e_stats.WIS = 26;
             break;
 
         case W_ELEMENTAL:
@@ -169,8 +168,8 @@ en_stats get_enemy_stats(Enemy* enemy){
 
         case BANDIT:
 
-            enemy->e_stats.HP = 300;
-            enemy->e_stats.STR = 12;
+            enemy->e_stats.HP = 500;
+            enemy->e_stats.STR = 14;
             enemy->e_stats.DEX = 20;
             enemy->e_stats.INT = 10;
             enemy->e_stats.WIS = 10;
@@ -187,5 +186,215 @@ en_stats get_enemy_stats(Enemy* enemy){
     return enemy->e_stats;
 }
 
+void print_enemy_info(Enemy* enemy)
+{
+    using enum ENEMIES;
+    switch (enemy->type)
+    {
+        case MURLOC:
+            cout << "Enemy: Murloc" << "\n\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << enemy->e_stats.HP << "\n";
+            cout << "STR: " << enemy->e_stats.STR << "\n";
+            cout << "DEX: " << enemy->e_stats.DEX << "\n";
+            cout << "INT: " << enemy->e_stats.INT << "\n";
+            cout << "WIS: " << enemy->e_stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        
+        case WOLF:
+            cout << "Enemy: Wolf" << "\n\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << enemy->e_stats.HP << "\n";
+            cout << "STR: " << enemy->e_stats.STR << "\n";
+            cout << "DEX: " << enemy->e_stats.DEX << "\n";
+            cout << "INT: " << enemy->e_stats.INT << "\n";
+            cout << "WIS: " << enemy->e_stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        
+        case E_MAGE:
+            cout << "Enemy: Mean Mage" << "\n\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << enemy->e_stats.HP << "\n";
+            cout << "STR: " << enemy->e_stats.STR << "\n";
+            cout << "DEX: " << enemy->e_stats.DEX << "\n";
+            cout << "INT: " << enemy->e_stats.INT << "\n";
+            cout << "WIS: " << enemy->e_stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        
+        case BANDIT:
+            cout << "Enemy: Bandit" << "\n\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << enemy->e_stats.HP << "\n";
+            cout << "STR: " << enemy->e_stats.STR << "\n";
+            cout << "DEX: " << enemy->e_stats.DEX << "\n";
+            cout << "INT: " << enemy->e_stats.INT << "\n";
+            cout << "WIS: " << enemy->e_stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        
+        case FROGZARD:
+            cout << "Enemy: Frogzard" << "\n\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << enemy->e_stats.HP << "\n";
+            cout << "STR: " << enemy->e_stats.STR << "\n";
+            cout << "DEX: " << enemy->e_stats.DEX << "\n";
+            cout << "INT: " << enemy->e_stats.INT << "\n";
+            cout << "WIS: " << enemy->e_stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+
+        case W_ELEMENTAL:
+            cout << "Enemy: Water Elemental" << "\n\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << enemy->e_stats.HP << "\n";
+            cout << "STR: " << enemy->e_stats.STR << "\n";
+            cout << "DEX: " << enemy->e_stats.DEX << "\n";
+            cout << "INT: " << enemy->e_stats.INT << "\n";
+            cout << "WIS: " << enemy->e_stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+
+        case MEGALOCRAB:
+            cout << "Enemy: Megalocrab" << "\n\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << enemy->e_stats.HP << "\n";
+            cout << "STR: " << enemy->e_stats.STR << "\n";
+            cout << "DEX: " << enemy->e_stats.DEX << "\n";
+            cout << "INT: " << enemy->e_stats.INT << "\n";
+            cout << "WIS: " << enemy->e_stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+
+        case GREENGUARD_DRAGON:
+            cout << "Enemy: Greenguard Dragon" << "\n\n";
+            cout << "Stats:" << "\n";
+            cout << "HP: " << enemy->e_stats.HP << "\n";
+            cout << "STR: " << enemy->e_stats.STR << "\n";
+            cout << "DEX: " << enemy->e_stats.DEX << "\n";
+            cout << "INT: " << enemy->e_stats.INT << "\n";
+            cout << "WIS: " << enemy->e_stats.WIS << "\n";
+            cout << "=========================================" << endl;
+            break;
+        default:
+            break;
+    }
+}
+en_stats level_enemy(Player* player, Enemy* enemy)
+{
+    using enum ENEMIES;
+
+    switch (enemy->type)
+    {
+                case MURLOC:
+                {
+                    for (int i = 1; i <= player->level; i++)
+                    {
+                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.STR += get_rand_num(2);
+                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_stats.INT += get_rand_num(2);
+                        enemy->e_stats.WIS += get_rand_num(2);
+                        enemy->e_level = i;
+                    }
+                    break;
+                }
+                case WOLF:
+                {
+                    for (int i = 1; i != player->level; i++)
+                    {
+                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.STR += get_rand_num(2);
+                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_level = i;
+                    }
+                    break;
+                }
+                case E_MAGE:
+                {
+                    for (int i = 1; i != player->level; i++)
+                    {
+                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.STR++;
+                        enemy->e_stats.DEX++;
+                        enemy->e_stats.INT += get_rand_num(2);
+                        enemy->e_stats.WIS += get_rand_num(2);
+                        enemy->e_level = i;
+                    }
+                    break;
+                }
+
+                case FROGZARD:
+                {
+                for (int i = 1; i != player->level; i++)
+                    {
+                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.STR += get_rand_num(2);
+                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_level = i;
+                    }
+                    break;
+                }
+                case GREENGUARD_DRAGON:
+                {                    
+                    for (int i = 1; i != player->level; i++)
+                    {
+                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.STR += get_rand_num(2);
+                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_stats.INT += get_rand_num(2);
+                        enemy->e_stats.WIS += get_rand_num(2);
+                        enemy->e_level = i;
+                    }
+                    break;
+                }
+
+                case W_ELEMENTAL:
+                {
+                   for (int i = 1; i != player->level; i++)
+                    {
+                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.INT += get_rand_num(2);
+                        enemy->e_stats.WIS += get_rand_num(2);
+                        enemy->e_level = i;
+                    }
+                    break;
+                }
+
+                case BANDIT:
+                {
+                    for (int i = 1; i != player->level; i++)
+                    {
+                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.STR += get_rand_num(2);
+                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_level = i;
+                    }
+                    break;
+                }
+
+                case MEGALOCRAB:
+                {
+                    for (int i = 1; i != player->level; i++)
+                    {
+                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.STR += get_rand_num(2);
+                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_stats.INT += get_rand_num(2);
+                        enemy->e_stats.WIS += get_rand_num(2);
+                        enemy->e_level = i;
+                    }
+                    break;
+                }
+    return enemy->e_stats;
+}
+
+    cout << "Enemy stats: \n" << "=========================================" << endl;
+    print_enemy_info(enemy);
+
+    return enemy->e_stats;
+}
 
 #endif

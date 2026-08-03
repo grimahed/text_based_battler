@@ -123,10 +123,10 @@ p_stats get_stats(Player* player)
 
 void print_class_info(Player* player)
 {
+    using enum PCLASSES;
     switch (player->kind)
     {
-        case PCLASSES::WARRIOR:
-            get_stats(player);
+        case WARRIOR:
             cout << "Class: Warrior" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
@@ -137,8 +137,7 @@ void print_class_info(Player* player)
             cout << "=========================================" << endl;
             break;
         
-        case PCLASSES::MAGE:
-            get_stats(player);
+        case MAGE:
             cout << "Class: Mage" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
@@ -149,8 +148,7 @@ void print_class_info(Player* player)
             cout << "=========================================" << endl;
             break;
         
-        case PCLASSES::ROGUE:
-            get_stats(player);
+        case ROGUE:
             cout << "Class: Rogue" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
@@ -161,8 +159,7 @@ void print_class_info(Player* player)
             cout << "=========================================" << endl;
             break;
         
-        case PCLASSES::WARLOCK:
-            get_stats(player);
+        case WARLOCK:
             cout << "Class: Warlock" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
@@ -173,8 +170,7 @@ void print_class_info(Player* player)
             cout << "=========================================" << endl;
             break;
         
-        case PCLASSES::PRIEST:
-            get_stats(player);
+        case PRIEST:
             cout << "Class: Priest" << "\n\n";
             cout << "Stats:" << "\n";
             cout << "HP: " << player->stats.HP << "\n";
@@ -202,30 +198,30 @@ p_stats level_up(Player* player)
     switch (player->kind)
     {
         case WARRIOR:
-            player->stats.HP += 50;
+            player->stats.HP += 100;
             player->stats.STR += get_rand_num(3);
             player->stats.DEX += get_rand_num(2);
             break;
         
         case MAGE:
-            player->stats.HP += 25;
+            player->stats.HP += 75;
             player->stats.INT += get_rand_num(3);
             player->stats.WIS += get_rand_num(2);
             break;
         
         case ROGUE:
-            player->stats.HP += 25;
+            player->stats.HP += 75;
             player->stats.STR += get_rand_num(2);
             player->stats.DEX += get_rand_num(3);
             break;
         
         case WARLOCK:
-            player->stats.HP += 25;
+            player->stats.HP += 75;
             player->stats.INT += get_rand_num(3);
             player->stats.WIS += get_rand_num(2);
             break;
         case PRIEST:
-            player->stats.HP += 25;
+            player->stats.HP += 75;
             player->stats.INT += get_rand_num(2);
             player->stats.WIS += get_rand_num(3);
             break;

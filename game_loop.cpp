@@ -29,7 +29,7 @@ void game_loop(Player* player, Enemy* enemy, Zone* zone)
             game_loop(player, enemy, zone);
         } else if (player->input == "2")
         {
-            player->current_HP /= .8;
+            player->current_HP += player->stats.HP / .8;
             if (player->current_HP > player->stats.HP)
             {
                 player->current_HP = player->stats.HP;}

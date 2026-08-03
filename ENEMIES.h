@@ -38,6 +38,7 @@ struct Enemy
     ENEMIES type;
     std::string name;
     std::list<std::string> ability_list;
+    int e_level = 1;
 
 
     //now it's not eye bleed material
@@ -47,7 +48,7 @@ struct Enemy
     std::list<std::string> w_elemental_atks = {"Water", "Dowse", "Torrent"};
     std::list<std::string> murloc_abilities = {"Attack", "Water", "Cure"}; //Gonna be a possible menace just like in classic!
     std::list<std::string> crab_atks = {"Pincer", "Pound and Toss", "Water Torrent"};
-    std::list<std::string> stnd_atks = {"Bonk", "Bigger Bonk", "Stab", "Casted Punch"}; //it is my legal obligation to include a casted punch
+    std::list<std::string> bandit_atks = {"Bonk", "Eviscerate", "Stab", "Casted Punch"}; //it is my legal obligation to include a casted punch
     std::list<std::string> drgn_atks = {"Attack", "Breathe Fire", "Icy Breath", "Fly and Swipe", "Chomp"};
 };                                                                                      
 
