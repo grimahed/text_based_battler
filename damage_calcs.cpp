@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include "PLAYER.h"
-#include <string>
+#include "ENEMIES.h"
 #include "helpers.cpp"
-#include <string.h>
+#include "player_building.cpp"
+#include "enemy_building.cpp"
 #include <optional>
-#include <ctype.h>
+#include <string>
 #include <string_view>
 #include <list>
 using namespace std;
@@ -16,7 +17,8 @@ using namespace std;
 W_SKILLS get_warrior_skill_used(Player* player)
 {
     if (player->kind != PCLASSES::WARRIOR) {
-        exit(1);
+        cout << "Unexpected error, reselect the class" << endl;
+        get_class(player);
     }
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "=========================================\n";
     std::cout << "" << std::endl;
@@ -49,7 +51,8 @@ W_SKILLS get_warrior_skill_used(Player* player)
 M_SKILLS get_mage_skill_used(Player* player)
 {
     if (player->kind != PCLASSES::MAGE) {
-        exit(1);
+        cout << "Unexpected error, reselect the class" << endl;
+        get_class(player);
     }
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
@@ -82,7 +85,8 @@ M_SKILLS get_mage_skill_used(Player* player)
 R_SKILLS get_rogue_skill_used(Player* player)
 {
     if (player->kind != PCLASSES::ROGUE) {
-        exit(1);
+        cout << "Unexpected error, reselect the class" << endl;
+        get_class(player);
     }
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
@@ -115,7 +119,8 @@ R_SKILLS get_rogue_skill_used(Player* player)
 WL_SKILLS get_warlock_skill_used(Player* player)
 {
     if (player->kind != PCLASSES::WARLOCK) {
-        exit(1);
+        cout << "Unexpected error, reselect the class" << endl;
+        get_class(player);
     }
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
@@ -148,7 +153,8 @@ WL_SKILLS get_warlock_skill_used(Player* player)
 P_SKILLS get_priest_skill_used(Player* player)
 {
     if (player->kind != PCLASSES::PRIEST) {
-        exit(1);
+        cout << "Unexpected error, reselect the class" << endl;
+        get_class(player);
     }
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
@@ -188,7 +194,6 @@ int calc_damage(Player* player)
         //WHY use dex or stats that won't be used later?
         //wait for later commits >:( They will be used while leveling if I implement it.
         case PCLASSES::WARRIOR:
-            get_stats(player);
             get_warrior_skill_used(player);
             switch (player->w_ability)
             {
@@ -214,7 +219,6 @@ int calc_damage(Player* player)
             break; //WARRIOR CASE BREAK
 
         case PCLASSES::MAGE:
-            get_stats(player);
             get_mage_skill_used(player);
             switch (player->m_ability)
             {
@@ -240,7 +244,6 @@ int calc_damage(Player* player)
             break; //MAGE CASE BREAK
 
             case PCLASSES::ROGUE:
-            get_stats(player);
             get_rogue_skill_used(player);
             switch (player->r_ability)
             {
@@ -266,7 +269,6 @@ int calc_damage(Player* player)
             break; //ROGUE CASE BREAK
 
             case PCLASSES::WARLOCK:
-            get_stats(player);
             get_warlock_skill_used(player);
             switch (player->wl_ability)
             {
@@ -292,7 +294,6 @@ int calc_damage(Player* player)
             break; //WARLOCK CASE BREAK
 
             case PCLASSES::PRIEST:
-            get_stats(player);
             get_priest_skill_used(player);
             switch (player->p_ability)
             {
@@ -324,9 +325,156 @@ int calc_damage(Player* player)
 }
 
 
+int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
+{
+    int damage = 0;
+    using enum ENEMIES;
+    
+    switch (enemy->type)
+    {
+        case MURLOC:
+        {
+        int len = list_len(enemy->murloc_abilities);
+        int num_get = get_rand_num(len);
+        std::string ability = get_item(enemy->murloc_abilities, num_get);
+        cout << "" << enemy->name << " attacks with: " << ability << endl;
+        damage = 40;
+        break;
+        }
 
+        case WOLF:
+        {
+            int len = list_len(enemy->wolf_atks);
+            int num_get = get_rand_num(len);
+            std::string ability = get_item(enemy->wolf_atks, num_get);
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
+            damage = 40;
+            break;
+        }
+
+        case BANDIT:
+        {
+            int len = list_len(enemy->stnd_atks);
+            int num_get = get_rand_num(len);
+            std::string ability = get_item(enemy->stnd_atks, num_get);
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
+            damage = 40;
+            break;
+        }
+
+        case E_MAGE:
+        {
+            int len = list_len(enemy->e_mage_atks);
+            int num_get = get_rand_num(len);
+            std::string ability = get_item(enemy->e_mage_atks, num_get);
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
+            damage = 40;
+            break;
+        }
+
+        case W_ELEMENTAL:
+        {
+            int len = list_len(enemy->w_elemental_atks);
+            int num_get = get_rand_num(len);
+            std::string ability = get_item(enemy->w_elemental_atks, num_get);
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
+            damage = 40;
+            break;
+        }
+
+        case MEGALOCRAB:
+        {
+            int len = list_len(enemy->crab_atks);
+            int num_get = get_rand_num(len);
+            std::string ability = get_item(enemy->crab_atks, num_get);
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
+            damage = 40;
+            break; 
+        }
+
+        case FROGZARD:
+        {
+            int len = list_len(enemy->wolf_atks);
+            int num_get = get_rand_num(len);
+            std::string ability = get_item(enemy->wolf_atks, num_get);
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
+            damage = 40;
+            break; 
+        }
+        
+        case GREENGUARD_DRAGON:
+        {
+            int len = list_len(enemy->drgn_atks);
+            int num_get = get_rand_num(len);
+            std::string ability = get_item(enemy->drgn_atks, num_get);
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
+            damage = 40;
+            break; 
+        }
+        default:
+        cout << "unexpected error" << endl;
+        break;
+    }
+    return damage;
+}
+
+int deal_damage(Enemy* enemy, int damage_dealt, int enemy_health)
+{
+    enemy_health -= damage_dealt;
+    cout << "You dealt " << damage_dealt << " damage!" << endl;
+    return enemy_health;
+}
+int take_damage(Player* player, int player_health, int damage_taken)
+    {
+    player_health -= damage_taken;
+    cout << "You took " << damage_taken << " damage!" << endl;
+    return player_health;
+    }
+void pre_enc(Player* player, Enemy* enemy, Zone* zone)
+{
+    get_enemy(player, enemy, zone);
+    cout << "You have encountered a " << enemy->name << "!" << endl;
+    get_enemy_stats(enemy);
+    enemy->current_enemy_hp = enemy->e_stats.HP;
+}
+
+void encounter(Player* player, Enemy* enemy, Zone* zone)
+{
+    while (player->is_alive && enemy->is_alive)
+   {    
+        player->turn_taken = false;
+        enemy->turn_taken = false;
+        
+        if (player->current_HP > 0 && player->turn_taken == false && enemy->current_enemy_hp > 0)
+        {
+            int damage_dealt = calc_damage(player);
+            enemy->current_enemy_hp = deal_damage(enemy, damage_dealt, enemy->current_enemy_hp);
+            if (enemy->current_enemy_hp <= 0) // you killed the enemy to death
+            {
+                enemy->current_enemy_hp = 0;
+                cout << "You defeated the " << enemy->name << "!" << endl;
+                enemy->is_alive = false;
+                level_up(player);
+                break;
+            }
+            cout << "" << enemy->name << "'s HP: " << enemy->current_enemy_hp << endl;
+            player->turn_taken = true;
+        }
+
+        if (player->turn_taken == true && enemy->turn_taken == false && enemy->current_enemy_hp > 0)
+        {
+            int e_damage_dealt = calc_enemy_damage(player, enemy, zone);
+            player->current_HP = take_damage(player, player->current_HP, e_damage_dealt);
+            if (player->current_HP <= 0) //you died to death
+            {
+                player->current_HP = 0;
+                player->is_alive = false;
+                cout << "You died! Game over" << endl;
+                break;
+            }
+            cout << "" << player->name << "'s HP: " << player->current_HP << endl;
+            enemy->turn_taken = true;
+        }
+    }
+}
 #endif
-
-
-//int deal_damage(int damage_dealt, int enemy_health);
-//int take_damage(int player_health, int damage_taken);

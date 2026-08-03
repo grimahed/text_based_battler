@@ -1,32 +1,38 @@
-#include <iostream> //I'll organize later.
+#include <iostream>
 #include "PLAYER.h"
-#include <string>
 #include "helpers.cpp"
-#include <string.h>
-#include <optional>
-#include <ctype.h>
-#include <string_view>
-#include <list>
 #include "player_building.cpp"
 #include "enemy_building.cpp"
 #include "damage_calcs.cpp"
+#include "game_loop.cpp"
+#include <optional>
+#include <string>
+#include <string_view>
+#include <list>
 
 int main() {
+
     Player* player = new Player(); 
+    Enemy* enemy = new Enemy();
+    Zone* zone = new Zone();
+    std::string input;
     cout << "=========================================" << endl;
     cout << "While playing you will use numbers for input, besides writing your name and class selection." << "\n\n"
             << "Keep in mind nothing else will be valid while you play." << endl; // I might make both usable later, though, just for variety.
     cout << "=========================================" << endl;
-    std::string name;
-    std::string class_name;
-    std::string input;
+   
+    //all player stuff
     player->name = get_player_name(); //starting the instance of the player object. Of course, starts with the name.
     cout << "=========================================" << endl;
-    player->kind = get_class(player);
-    player->ability_list = class_abilities(player);
+    get_class(player);
+    get_stats(player);
+    class_abilities(player);
     print_class_info(player);
-    get_zone(player);
-    int damage_dealt = calc_damage(player);
-    cout << "You dealt " << damage_dealt << " damage to the murloc" << endl;
+    player->current_HP = player->stats.HP;
+    player->current_zone = get_zone(player);
+    //=======================================
+
+    //game loop
+    game_loop(player, enemy, zone);
     return 0;
 }

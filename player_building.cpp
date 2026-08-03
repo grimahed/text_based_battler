@@ -2,30 +2,13 @@
 #define PLAYER_BUILDING_CPP
 #include <iostream>
 #include "PLAYER.h"
-#include <string>
 #include "helpers.cpp"
-#include <stdexcept>
-#include <optional>
-#include <ctype.h>
+#include <string>
 #include <string_view>
 #include <list>
+#include <stdexcept>
+#include <optional>
 using namespace std;
-
-
-/*std::string print_current_zone(Player player, std::string input) { //probably gonna homebrew a dynamic helper for this just for the hell of it
-    std::string message = "";                //"But you'll just essentially be copy pasting!...Yeah and? if it works it works."
-    for (auto i = player.zone_list.begin(); i != player.zone_list.end(); i++)  //:^)
-    {   
-        if (input == "1"){
-            
-            std::string message = "Your current zone is" + get_item(player.zone_list, 0);
-        }
-    }
-}
-    return message;*/ //probably not needed
-
-
-//=============================================================
 
 
 std::string get_player_name()
@@ -88,9 +71,11 @@ PCLASSES get_class(Player* player)
 
 p_stats get_stats(Player* player)
 {
+    using enum PCLASSES;
+
     switch (player->kind)
     {
-        case PCLASSES::WARRIOR:
+        case WARRIOR:
             player->stats.HP = 400;
             player->stats.STR = 15;
             player->stats.DEX = 10; //but don't anyone you leveled it
@@ -98,7 +83,7 @@ p_stats get_stats(Player* player)
             player->stats.WIS = 8;
             break;
 
-        case PCLASSES::MAGE:
+        case MAGE:
             player->stats.HP = 275;
             player->stats.STR = 9;
             player->stats.DEX = 9;
@@ -106,7 +91,7 @@ p_stats get_stats(Player* player)
             player->stats.WIS = 12;
             break;
         
-        case PCLASSES::ROGUE:
+        case ROGUE:
             player->stats.HP = 325;
             player->stats.STR = 10;
             player->stats.DEX = 15;
@@ -114,7 +99,7 @@ p_stats get_stats(Player* player)
             player->stats.WIS = 8;  //lol, lmao.
             break;
 
-        case PCLASSES::WARLOCK:
+        case WARLOCK:
             player->stats.HP = 275;
             player->stats.STR= 8;
             player->stats.DEX = 10;
@@ -122,7 +107,7 @@ p_stats get_stats(Player* player)
             player->stats.WIS = 10;
             break;
 
-        case PCLASSES::PRIEST:
+        case PRIEST:
             player->stats.HP = 250;
             player->stats.STR = 8;
             player->stats.DEX = 10;
@@ -135,34 +120,6 @@ p_stats get_stats(Player* player)
     }
     return player->stats;
 }
-
-std::list<std::string> class_abilities(Player* player)
-{
-
-    switch (player->kind) {
-
-    case PCLASSES::WARRIOR:
-        player->ability_list = {"Mortal Strike", "Overpower", "Execute", "Rend"};
-        break;
-    
-    case PCLASSES::MAGE:
-        player->ability_list = {"Ice bolt", "Fireblast", "Thunder", "Ice Block"};
-        break;
-    
-    case PCLASSES::ROGUE:
-        player->ability_list = {"Slice and Dice", "Kick", "Saber Slash", "Poison Bomb"};
-        break;
-    
-    case PCLASSES::WARLOCK:
-        player->ability_list = {"Shadow Bolt", "Bone Decay", "Rain of Fire", "Summon Demon"};
-        break;
-    
-    case PCLASSES::PRIEST:
-        player->ability_list = {"Heal", "Dia", "Holy", "Aero"};
-        break;
-    }
-    return player->ability_list;
-    }
 
 void print_class_info(Player* player)
 {
@@ -232,10 +189,85 @@ void print_class_info(Player* player)
     }
 }
 
+p_stats level_up(Player* player)
+{
+    using enum PCLASSES;
+
+    player->level++;
+    cout << "You are now level " << player->level << "!" << endl;
+    
+    cout << "Prior Stats: \n" << "=========================================" << endl;
+    print_class_info(player);
+
+    switch (player->kind)
+    {
+        case WARRIOR:
+            player->stats.HP += 50;
+            player->stats.STR += get_rand_num(3);
+            player->stats.DEX += get_rand_num(2);
+            break;
+        
+        case MAGE:
+            player->stats.HP += 25;
+            player->stats.INT += get_rand_num(3);
+            player->stats.WIS += get_rand_num(2);
+            break;
+        
+        case ROGUE:
+            player->stats.HP += 25;
+            player->stats.STR += get_rand_num(2);
+            player->stats.DEX += get_rand_num(3);
+            break;
+        
+        case WARLOCK:
+            player->stats.HP += 25;
+            player->stats.INT += get_rand_num(3);
+            player->stats.WIS += get_rand_num(2);
+            break;
+        case PRIEST:
+            player->stats.HP += 25;
+            player->stats.INT += get_rand_num(2);
+            player->stats.WIS += get_rand_num(3);
+            break;
+        }
+
+    cout << "New stats: \n" << "=========================================" << endl;
+    print_class_info(player);
+
+    return player->stats;
+}
+std::list<std::string> class_abilities(Player* player)
+{
+
+    switch (player->kind) {
+
+    case PCLASSES::WARRIOR:
+        player->ability_list = {"Mortal Strike", "Overpower", "Execute", "Rend"};
+        break;
+    
+    case PCLASSES::MAGE:
+        player->ability_list = {"Ice bolt", "Fireblast", "Thunder", "Ice Block"};
+        break;
+    
+    case PCLASSES::ROGUE:
+        player->ability_list = {"Slice and Dice", "Kick", "Saber Slash", "Poison Bomb"};
+        break;
+    
+    case PCLASSES::WARLOCK:
+        player->ability_list = {"Shadow Bolt", "Bone Decay", "Rain of Fire", "Summon Demon"};
+        break;
+    
+    case PCLASSES::PRIEST:
+        player->ability_list = {"Heal", "Dia", "Holy", "Aero"};
+        break;
+    }
+    return player->ability_list;
+    }
+
 ZONES get_zone(Player* player)
 {
     std::string input;
-    cout << "Choose a zone from: " << print_list(player->zone_list) << endl;     //Yeah, i plan on numeric input because
+    cout << "Choose a zone from: " << print_list(player->zone_list) << endl;     //Yeah, i plan on numeric input because of tedium
     std::cout << "" << std::endl;;                                               //Probs will make text an option though.      
     std::getline(cin, input);
     int num_imput = 0;                                         
@@ -247,13 +279,9 @@ ZONES get_zone(Player* player)
     } else if (input == "2") {
         player->current_zone = ZONES::ZORAVIA;
         int num_input = std::stoi(input);
-        //cout << "Current Zone: " << get_item(player->zone_list, num_input) << endl; //these style prints lines are for debugging, btw
-        //cout << "=========================================" << endl;
     } else if (input == "3") {
-        player->current_zone = ZONES::AREANAME3;
+        player->current_zone = ZONES::GREENGUARD;
         int num_input = std::stoi(input);
-        //cout << "Current Zone: " << get_item(player->zone_list, num_input) << endl; //these style prints lines are for debugging, btw
-        //cout << "=========================================" << endl;
     } 
     else {
         cout << "Need valid input mans" << endl << "=========================================" << endl;

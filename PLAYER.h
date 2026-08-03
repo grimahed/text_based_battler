@@ -30,16 +30,17 @@ enum class P_SKILLS {HEAL, DIA, HOLY, AERO};
 
 struct Player
 {
-    bool is_alive;
-
-    int level;
-
+    bool is_alive = true;
+    bool turn_taken;
+    int level = 1;
+    int current_HP;
     std::string input;
     std::string name;
     PCLASSES kind;
     p_stats stats;
+    p_stats new_stats;
     std::list<std::string> ability_list;
-    std::list<std::string> zone_list = {"Elwynn Forest", "Zoravia", "AREANAME3"};
+    std::list<std::string> zone_list = {"Elwynn Forest", "Zoravia", "Greenguard"};
     ZONES current_zone;
     //ability stuff
     W_SKILLS w_ability;

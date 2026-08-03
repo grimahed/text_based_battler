@@ -1,16 +1,18 @@
 #ifndef HELPERS_CPP
 #define HELPERS_CPP
 
-#include <iostream> //I'll organize later.
+#include <iostream> 
 #include "PLAYER.h"
-#include <string>
+#include "ENEMIES.h"
+#include "ZONES.h"
 #include <optional>
-#include <ctype.h>
+#include <string>
 #include <string_view>
 #include <list>
+#include <random>
 using namespace std;
 
-//helpers I might move to their own cpp file. We'll see
+
 bool only_whitespace(std::string_view str)
 {
     size_t length = str.size();
@@ -27,8 +29,18 @@ bool only_whitespace(std::string_view str)
     return false;
 }
 
-std::string print_list(std::list<std::string> list) { //probably gonna homebrew a dynamic helper for this just for the hell of it
-    std::string message = "";                         //"But you'll just essentially be copy pasting!...Yeah and? if it works it works."
+int get_rand_num(int num)
+{
+    std::random_device rd; //seed source for engine
+    std::mt19937 gen(rd()); //engine being seeded with rd
+    std::uniform_int_distribution<> distrib(1, num);
+
+    //getting it
+    return distrib(gen);
+}
+std::string print_list(std::list<std::string> list) 
+{
+    std::string message = "";                         
     int count = 1;
     for (auto i = list.begin(); i != list.end(); i++)
     {
@@ -49,7 +61,16 @@ std::string print_list(std::list<std::string> list) { //probably gonna homebrew 
     return message;
 }
 
-//attempting to make a list access helper
+int list_len(std::list<std::string> list) 
+{                        
+    int count = 0;
+    for (auto i = list.begin(); i != list.end(); i++)
+    {
+    count++;
+    }
+    return count;
+}
+
 std::string get_item(std::list<std::string> list, int i)
 {
     if (list.empty())

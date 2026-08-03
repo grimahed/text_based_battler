@@ -5,13 +5,10 @@
 #include <string>
 #include <list>
 
-enum class WOLVES {WOLF, DIREWOLF};
+//enum class WOLVES {WOLF, DIREWOLF};
+//enum class E_MAGE {ZORAVIAN_MAGE, ELWYNN_MAGE};
 
-
-enum class PHYS_ENEMY_ATKS {ATTACK, BIGGER_BONK, BITE, DEADLIER_BITE};
-enum class MAG_ENEMY_ATKS {BONK, FIRE, THUNDER, WATER, GUST};
-
-struct e_stats
+struct en_stats
 {
     int HP;
     int STR;
@@ -20,17 +17,39 @@ struct e_stats
     int WIS;
 };
 
-//struct wolves {WOLF_TYPES arg; WOLF_TYPES get_wolf(WOLF_TYPES arg) {};};
+enum class ENEMIES
+{
+    MURLOC,
+    WOLF,
+    E_MAGE,
+    FROGZARD,
+    GREENGUARD_DRAGON,
+    W_ELEMENTAL,
+    BANDIT,
+    MEGALOCRAB, //good heavens would you look at the time
+};
 
 struct Enemy
 {
-    bool is_alive;
-    void* type;
-    ZONES zone;
+    bool is_alive = true;
+    bool turn_taken;
+    en_stats e_stats;
+    int current_enemy_hp;
+    ENEMIES type;
     std::string name;
-    //Enemy() : val() {};
-    int count;
-};
+    std::list<std::string> ability_list;
+
+
+    //now it's not eye bleed material
+    std::list<std::string> wolf_atks = {"Attack", "Bite", "Deadlier Bite", "Slash"};
+    std::list<std::string> big_wolf_atks = {"Attack", "Deadlier Bite", "Gouge", "Shred"};
+    std::list<std::string> e_mage_atks = {"Bonk", "Fire", "Water", "Gust"};
+    std::list<std::string> w_elemental_atks = {"Water", "Dowse", "Torrent"};
+    std::list<std::string> murloc_abilities = {"Attack", "Water", "Cure"}; //Gonna be a possible menace just like in classic!
+    std::list<std::string> crab_atks = {"Pincer", "Pound and Toss", "Water Torrent"};
+    std::list<std::string> stnd_atks = {"Bonk", "Bigger Bonk", "Stab", "Casted Punch"}; //it is my legal obligation to include a casted punch
+    std::list<std::string> drgn_atks = {"Attack", "Breathe Fire", "Icy Breath", "Fly and Swipe", "Chomp"};
+};                                                                                      
 
 
 #endif
