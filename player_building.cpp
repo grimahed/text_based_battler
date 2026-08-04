@@ -41,26 +41,29 @@ std::string get_player_name()
 
 PCLASSES get_class(Player* player)
 {
+    using enum PCLASSES;
+
     std::string user_input;
     cout << "Select from the following classes:" << "\n";
     cout << "Warrior, Mage, Rogue, Warlock, Priest" << "\n" << "=========================================" << "\n";
     std::cout << "" << std::endl;
     std::getline(cin, user_input);
 
-    if (user_input == "Warrior" || user_input == "warrior") {
-        player->kind = PCLASSES::WARRIOR;
+    std::string shrunk_text = make_lower(user_input);
+    if (shrunk_text == "warrior") {
+        player->kind = WARRIOR;
     }
-    else if (user_input == "Mage" || user_input == "mage") {
-        player->kind = PCLASSES::MAGE;
+    else if (shrunk_text == "mage") {
+        player->kind = MAGE;
     }
-    else if (user_input == "Rogue" || user_input == "rogue") {
-        player->kind = PCLASSES::ROGUE;
+    else if (shrunk_text == "rogue") {
+        player->kind = ROGUE;
     }
-    else if (user_input == "Warlock" || user_input == "warlock") {
-        player->kind = PCLASSES::WARLOCK;
+    else if (shrunk_text == "warlock") {
+        player->kind = WARLOCK;
     }
-    else if (user_input == "Priest" || user_input == "priest") {
-        player->kind = PCLASSES::PRIEST;
+    else if (shrunk_text == "priest") {
+        player->kind = PRIEST;
     } else {
         cout << "invalid input. Read my man, try again." << "\n" << "=========================================" << "\n";
         get_class(player);
@@ -235,25 +238,27 @@ p_stats level_up(Player* player)
 std::list<std::string> class_abilities(Player* player)
 {
 
+    using enum PCLASSES;
+
     switch (player->kind) {
 
-    case PCLASSES::WARRIOR:
-        player->ability_list = {"Mortal Strike", "Overpower", "Execute", "Rend"};
+    case WARRIOR:
+        player->ability_list = {"Mortal Strike", "Overpower", "Rend", "Execute"};
         break;
     
-    case PCLASSES::MAGE:
+    case MAGE:
         player->ability_list = {"Ice bolt", "Fireblast", "Thunder", "Ice Block"};
         break;
     
-    case PCLASSES::ROGUE:
+    case ROGUE:
         player->ability_list = {"Slice and Dice", "Kick", "Saber Slash", "Poison Bomb"};
         break;
     
-    case PCLASSES::WARLOCK:
+    case WARLOCK:
         player->ability_list = {"Shadow Bolt", "Bone Decay", "Rain of Fire", "Summon Demon"};
         break;
     
-    case PCLASSES::PRIEST:
+    case PRIEST:
         player->ability_list = {"Heal", "Dia", "Holy", "Aero"};
         break;
     }
@@ -263,8 +268,8 @@ std::list<std::string> class_abilities(Player* player)
 ZONES get_zone(Player* player)
 {
     std::string input;
-    cout << "Choose a zone from: " << print_list(player->zone_list) << endl;     //Yeah, i plan on numeric input because of tedium
-    std::cout << "" << std::endl;;                                               //Probs will make text an option though.      
+    cout << "Choose a zone from: " << print_list(player->zone_list) << endl; //this will stay numeric
+    std::cout << "" << std::endl;;                                                     
     std::getline(cin, input);
     int num_imput = 0;                                         
     if (input == "1"){

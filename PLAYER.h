@@ -32,6 +32,8 @@ struct Player
 {
     bool is_alive = true;
     bool turn_taken;
+    bool ice_cubed = false;
+    bool non_damage_used = false;
     int level = 1;
     int current_HP;
     std::string input;

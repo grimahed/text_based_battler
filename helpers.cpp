@@ -2,13 +2,12 @@
 #define HELPERS_CPP
 
 #include <iostream> 
-#include "PLAYER.h"
-#include "ENEMIES.h"
-#include "ZONES.h"
 #include <optional>
 #include <string>
 #include <string_view>
 #include <list>
+#include <algorithm>
+#include <cctype>
 #include <random>
 using namespace std;
 
@@ -85,6 +84,11 @@ std::string get_item(std::list<std::string> list, int i)
     return *in;
 }
 
-
+std::string make_lower(std::string str)
+{
+    std::transform(str.begin(), str.end(), str.begin(), 
+    [](unsigned char c) {return std::tolower(c);});
+    return str;
+}
 
 #endif

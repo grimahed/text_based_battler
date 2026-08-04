@@ -33,6 +33,9 @@ struct Enemy
 {
     bool is_alive = true;
     bool turn_taken;
+    bool ripe_for_execution = false;
+    bool has_dot = false;
+    bool non_damage_s_used = false;
     en_stats e_stats;
     int current_enemy_hp;
     ENEMIES type;

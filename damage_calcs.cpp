@@ -14,42 +14,58 @@
 using namespace std;
 
 
-W_SKILLS get_warrior_skill_used(Player* player)
+W_SKILLS get_warrior_skill_used(Player* player, Enemy* enemy)
 {
+   using enum W_SKILLS;
+
+    //execution rng code
     if (player->kind != PCLASSES::WARRIOR) {
         cout << "Unexpected error, reselect the class" << endl;
         get_class(player);
     }
+    int rand_num = get_rand_num(4);
+    if (enemy->ripe_for_execution || rand_num == 3)
+    {
+        class_abilities(player);
+    } else {
+        player->ability_list = {"Mortal Strike", "Overpower", "Rend"};
+    }
+
+
+    //ability selection
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "=========================================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    std:string shrinka_da_text = make_lower(player->input);
     cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "=========================================" << endl;
-        get_warrior_skill_used(player);
+        get_warrior_skill_used(player, enemy);
     }
-    else if (player->input == "1")
+    else if (player->input == "1" || shrinka_da_text== "mortal strike")
     {
-        player->w_ability = W_SKILLS::MORTAL_STRIKE;
+        player->w_ability = MORTAL_STRIKE;
     }
-    else if (player->input == "2"){
-        player->w_ability = W_SKILLS::OVERPOWER;
+    else if (player->input == "2" || shrinka_da_text == "overpower"){
+        player->w_ability = OVERPOWER;
     }
-    else if (player->input == "3"){
-        player->w_ability = W_SKILLS::EXECUTE;
+    else if (player->input == "3" || shrinka_da_text == "rend"){
+        player->w_ability = REND;
     }
-    else if (player->input == "4"){
-        player->w_ability = W_SKILLS::REND;
+    else if ((enemy->ripe_for_execution || rand_num == 3) && (player->input == "4" || shrinka_da_text == "execute")){
+        player->w_ability = EXECUTE;
     } else {
         cout << "not valid input" << endl;
-        get_warrior_skill_used(player);
+        get_warrior_skill_used(player, enemy);
     }
     return player->w_ability;
 }
 
 M_SKILLS get_mage_skill_used(Player* player)
 {
+    using enum M_SKILLS;
+
     if (player->kind != PCLASSES::MAGE) {
         cout << "Unexpected error, reselect the class" << endl;
         get_class(player);
@@ -57,24 +73,26 @@ M_SKILLS get_mage_skill_used(Player* player)
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    std::string shrinka_da_text = make_lower(player->input);
     cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "==========================" << endl;
         get_mage_skill_used(player);
     }
-    else if (player->input == "1")
+    else if (player->input == "1" || shrinka_da_text == "ice bolt")
     {
-        player->m_ability = M_SKILLS::ICE_BOLT;
+        player->m_ability = ICE_BOLT;
     }
-    else if (player->input == "2"){
-        player->m_ability = M_SKILLS::FIREBLAST;
+    else if (player->input == "2" || shrinka_da_text == "fireblast")
+    {
+        player->m_ability = FIREBLAST;
     }
-    else if (player->input == "3"){
-        player->m_ability = M_SKILLS::THUNDER;
+    else if (player->input == "3" || shrinka_da_text == "thunder"){
+        player->m_ability = THUNDER;
     }
-    else if (player->input == "4"){
-        player->m_ability = M_SKILLS::ICE_BLOCK;
+    else if (player->input == "4" || shrinka_da_text == "ice block"){
+        player->m_ability = ICE_BLOCK;
     } else {
         cout << "not valid input" << endl;
         get_mage_skill_used(player);
@@ -84,6 +102,7 @@ M_SKILLS get_mage_skill_used(Player* player)
 
 R_SKILLS get_rogue_skill_used(Player* player)
 {
+    using enum R_SKILLS;
     if (player->kind != PCLASSES::ROGUE) {
         cout << "Unexpected error, reselect the class" << endl;
         get_class(player);
@@ -91,24 +110,25 @@ R_SKILLS get_rogue_skill_used(Player* player)
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    std::string shrinka_da_text = make_lower(player->input);
     cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "==========================" << endl;
         get_rogue_skill_used(player);
     }
-    else if (player->input == "1")
+    else if (player->input == "1" || shrinka_da_text == "slice and dice")
     {
-        player->r_ability = R_SKILLS::SLICE_AND_DICE;
+        player->r_ability = SLICE_AND_DICE;
     }
-    else if (player->input == "2"){
-        player->r_ability = R_SKILLS::KICK;
+    else if (player->input == "2" || shrinka_da_text == "kick"){
+        player->r_ability = KICK;
     }
-    else if (player->input == "3"){
-        player->r_ability = R_SKILLS::SABER_SLASH;
+    else if (player->input == "3" || shrinka_da_text == "saber slash"){
+        player->r_ability = SABER_SLASH;
     }
-    else if (player->input == "4"){
-        player->r_ability = R_SKILLS::POISON_BOMB;
+    else if (player->input == "4" || shrinka_da_text == "poison bomb"){
+        player->r_ability = POISON_BOMB;
     } else {
         cout << "not valid input" << endl;
         get_rogue_skill_used(player);
@@ -118,31 +138,35 @@ R_SKILLS get_rogue_skill_used(Player* player)
 
 WL_SKILLS get_warlock_skill_used(Player* player)
 {
+    using enum WL_SKILLS;
+
     if (player->kind != PCLASSES::WARLOCK) {
         cout << "Unexpected error, reselect the class" << endl;
         get_class(player);
     }
+
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    std::string shrinka_da_text = make_lower(player->input);
     cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "==========================" << endl;
         get_warlock_skill_used(player);
     }
-    else if (player->input == "1")
+    else if (player->input == "1" || shrinka_da_text == "shadow bolt")
     {
-        player->wl_ability = WL_SKILLS::SHADOW_BOLT;
+        player->wl_ability = SHADOW_BOLT;
     }
-    else if (player->input == "2"){
-        player->wl_ability = WL_SKILLS::BONE_DECAY;
+    else if (player->input == "2" || shrinka_da_text == "bone decay"){
+        player->wl_ability = BONE_DECAY;
     }
-    else if (player->input == "3"){
-        player->wl_ability = WL_SKILLS::RAIN_OF_FIRE;
+    else if (player->input == "3" || shrinka_da_text == "rain of fire"){
+        player->wl_ability = RAIN_OF_FIRE;
     }
-    else if (player->input == "4"){
-        player->wl_ability = WL_SKILLS::SUMMON_DEMON;
+    else if (player->input == "4" || shrinka_da_text == "summon demon"){
+        player->wl_ability = SUMMON_DEMON;
     } else {
         cout << "not valid input" << endl;
         get_warlock_skill_used(player);
@@ -152,31 +176,35 @@ WL_SKILLS get_warlock_skill_used(Player* player)
 
 P_SKILLS get_priest_skill_used(Player* player)
 {
+    using enum P_SKILLS;
+
     if (player->kind != PCLASSES::PRIEST) {
         cout << "Unexpected error, reselect the class" << endl;
         get_class(player);
     }
+
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "==========================\n";
     std::cout << "" << std::endl;
     std::getline(cin, player->input);
+    std::string shrinka_da_text = make_lower(player->input);
     cout << "=========================================" << endl;
     if (only_whitespace(player->input))
     {
         cout << "Do you *want* to die?\n" << "==========================" << endl;
         get_priest_skill_used(player);
     }
-    else if (player->input == "1")
+    else if (player->input == "1" || shrinka_da_text == "heal")
     {
-        player->p_ability = P_SKILLS::HEAL;
+        player->p_ability = HEAL;
     }
-    else if (player->input == "2"){
-        player->p_ability = P_SKILLS::DIA;
+    else if (player->input == "2" || shrinka_da_text == "dia"){
+        player->p_ability = DIA;
     }
-    else if (player->input == "3"){
-        player->p_ability = P_SKILLS::HOLY;
+    else if (player->input == "3" || shrinka_da_text == "holy"){
+        player->p_ability = HOLY;
     }
-    else if (player->input == "4"){
-        player->p_ability = P_SKILLS::AERO;
+    else if (player->input == "4" || shrinka_da_text == "aero"){
+        player->p_ability = AERO;
     } else {
         cout << "not valid input" << endl;
         get_priest_skill_used(player);
@@ -185,31 +213,34 @@ P_SKILLS get_priest_skill_used(Player* player)
 }
 
 
-int calc_damage(Player* player)
+int calc_damage(Player* player, Enemy* enemy)
 {
     int damage = 0;
+    using enum PCLASSES;
+    using enum W_SKILLS;
+    using enum M_SKILLS;
+    using enum R_SKILLS;
+    using enum WL_SKILLS;
+    using enum P_SKILLS; 
     switch (player->kind)
     {
-
-        //WHY use dex or stats that won't be used later?
-        //wait for later commits >:( They will be used while leveling if I implement it.
-        case PCLASSES::WARRIOR:
-            get_warrior_skill_used(player);
+        case WARRIOR:
+            get_warrior_skill_used(player, enemy);
             switch (player->w_ability)
             {
-                case W_SKILLS::MORTAL_STRIKE:
+                case MORTAL_STRIKE:
                     damage = (player->stats.STR + player->stats.DEX) * 3;
                     break;                              
                 
-                case W_SKILLS::OVERPOWER:
+                case OVERPOWER:
                     damage = (player->stats.STR + (player->stats.DEX / 3)) * 3;
                     break;
                 
-                case W_SKILLS::EXECUTE:
-                    damage = (player->stats.STR + player->stats.DEX) * 5;
+                case EXECUTE:
+                    damage = (player->stats.STR + player->stats.DEX) * 7;
                     break;
-                //What's the point of the others then? Wait for future commit (mob implementation). IFYKYK.
-                case W_SKILLS::REND:
+                //Now with code to fulfill your murder hobo dopamine hits!
+                case REND:
                     damage = (player->stats.STR + (player->stats.DEX * .8)) * 2;
                     break; //Will be a DoT. another IFYKYK.
                 default:
@@ -218,24 +249,26 @@ int calc_damage(Player* player)
             }
             break; //WARRIOR CASE BREAK
 
-        case PCLASSES::MAGE:
+        case MAGE:
             get_mage_skill_used(player);
             switch (player->m_ability)
             {
-                case M_SKILLS::ICE_BOLT:
+                case ICE_BOLT:
                 damage = (player->stats.INT + player->stats.WIS) * 2;
                 break;
 
-                case M_SKILLS::FIREBLAST:
+                case FIREBLAST:
                 damage = (player->stats.INT + (player->stats.WIS * .6)) * 3;
                 break;
                 
-                case M_SKILLS::THUNDER:
+                case THUNDER:
                 damage = (player->stats.INT + (player->stats.WIS * .8)) * 2;
                 break;
-                //I got to this a lot faster than I expected, here's that commit(tm) you requested
-                case M_SKILLS::ICE_BLOCK:
+
+                case ICE_BLOCK:
                 damage = 0;
+                player->ice_cubed = true;
+                player->non_damage_used = true;
                 break;
                 default:
                     cout << "unexpected error. oopsie~" << endl;
@@ -243,23 +276,23 @@ int calc_damage(Player* player)
             }
             break; //MAGE CASE BREAK
 
-            case PCLASSES::ROGUE:
+            case ROGUE:
             get_rogue_skill_used(player);
             switch (player->r_ability)
             {
-                case R_SKILLS::SLICE_AND_DICE:
+                case SLICE_AND_DICE:
                     damage = (player->stats.DEX + (player->stats.STR * .2)) * 4;
                     break; //trying to emulate multiple slashes with one calc. Might try to make it ACTUALLY multiple later.
-                
-                case R_SKILLS::KICK:
+                           //yeah the idea got scrapped lol. Feel free to do it yourself though. Simple for loop should do it.
+                case KICK:
                     damage = (player->stats.DEX + (player->stats.STR * .2)) * 2;
                     break; //yes this will be a stun. Again, IFYKYK.
                 
-                case R_SKILLS::SABER_SLASH:
+                case SABER_SLASH:
                     damage = (player->stats.DEX + player->stats.STR) * 3;
                     break;
                 
-                case R_SKILLS::POISON_BOMB:
+                case POISON_BOMB:
                     damage = (player->stats.DEX + (player->stats.STR * .8)) * 2;
                     break; //anotha DoT
                 default:
@@ -268,23 +301,23 @@ int calc_damage(Player* player)
             }
             break; //ROGUE CASE BREAK
 
-            case PCLASSES::WARLOCK:
+            case WARLOCK:
             get_warlock_skill_used(player);
             switch (player->wl_ability)
             {
-                case WL_SKILLS::SHADOW_BOLT:
+                case SHADOW_BOLT:
                     damage = (player->stats.INT + (player->stats.WIS / 2)) * 3;
                     break;
                 
-                case WL_SKILLS::BONE_DECAY:
+                case BONE_DECAY:
                     damage = (player->stats.INT + (player->stats.WIS * .8)) * 2;
                     break; //DoT
                 
-                case WL_SKILLS::RAIN_OF_FIRE:
+                case RAIN_OF_FIRE:
                     damage = (player->stats.INT + player->stats.WIS) * 2;
                     break;
                 
-                case WL_SKILLS::SUMMON_DEMON:
+                case SUMMON_DEMON:
                     damage = (player->stats.INT + (player->stats.WIS)) * 5;
                     break;
                 default:
@@ -293,23 +326,31 @@ int calc_damage(Player* player)
             }
             break; //WARLOCK CASE BREAK
 
-            case PCLASSES::PRIEST:
+            case PRIEST:
             get_priest_skill_used(player);
             switch (player->p_ability)
             {
-                case P_SKILLS::HEAL: //let me heal through violence? :D
-                    damage = 0;      //NO
+                case HEAL: //let me heal through violence? :D
+                {   damage = 0;      //NO
+                    int amount_healed = player->stats.HP * .8;
+                    player->current_HP += amount_healed;
+                    if (player->current_HP > player->stats.HP)
+                    {
+                        player->current_HP = player->stats.HP;
+                    }
+                    cout << "You healed yourself for " << amount_healed << "!" << endl;
                     break;
+                }
                 
-                case P_SKILLS::DIA:
+                case DIA:
                     damage = (player->stats.WIS + (player->stats.INT * .8)) * 2;
                     break; //DoT
                 
-                case P_SKILLS::HOLY:
-                    damage = (player->stats.WIS + (player->stats.INT * .4)) * 2;
-                    break;
+                case HOLY: // I was going to make multi mob encounters possible, and this aoe. Maybe down the road.
+                    damage = (player->stats.WIS + (player->stats.INT * .4)) * 2; //but to lower the scope, not for now.
+                    break; //feel free to add them yourself though! Till then this is single target.
                 
-                case P_SKILLS::AERO:
+                case AERO:
                     damage = (player->stats.WIS + (player->stats.INT / 2)) * 3;
                     break;
                 default:
@@ -340,10 +381,12 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
         int len = list_len(enemy->murloc_abilities);
         int num_get = get_rand_num(len);
         std::string ability = get_item(enemy->murloc_abilities, num_get);
-        if (num_get == 1) //Basic Attack
+        
+        if (num_get == 1) //attack
         {
             cout << "" << enemy->name << " attacks with: " << ability << endl;
             damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 2;
+
         } else if (num_get == 2) //Water
         {
             cout << "" << enemy->name << " attacks with: " << ability << endl;
@@ -351,7 +394,11 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
         } else if (num_get == 3) //Heal case
         {
             cout << "" << enemy->name << " Heals with: " << ability << endl;
-            damage = 0;
+            enemy->non_damage_s_used = true;
+            enemy->current_enemy_hp += enemy->e_stats.HP * .4;
+            cout << "The " << enemy->name << "'s HP is now " << enemy->current_enemy_hp << endl;
+            cout << "-------------------------------------------" << endl;
+
         } else {cout << "Unexpected error" << endl;}
         break;
         }
@@ -361,23 +408,17 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             int len = list_len(enemy->wolf_atks);
             int num_get = get_rand_num(len);
             std::string ability = get_item(enemy->wolf_atks, num_get);
-            if (num_get == 1) //Standard attack case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 2;
-            } else if (num_get == 2) //Bite case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2;
-            } else if (num_get == 3) //Deadlier Bite case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;
-            } else if (num_get == 4) //Bite case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX + 2)) * 3;
-            } else {cout << "unexpected error" << endl;}
+            //attack
+            if (num_get == 1) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 2;} 
+            //bite
+            else if (num_get == 2) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2;} 
+            //deadlier bite
+            else if (num_get == 3) {damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;}
+            //slash
+            else if (num_get == 4){damage = (enemy->e_stats.STR + (enemy->e_stats.DEX + 2)) * 3;} 
+            else {cout << "unexpected error" << endl;}
+
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
             break;
         }
 
@@ -386,23 +427,19 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             int len = list_len(enemy->bandit_atks);
             int num_get = get_rand_num(len);
             std::string ability = get_item(enemy->bandit_atks, num_get);
-            if (num_get == 1) //Bonque
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .2)) * 2;
-            } else if (num_get == 2) //Eviscerate
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 3;
-            } else if (num_get == 3) //Stab
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2;
-            } else if (num_get == 4) //Casted Punch. Just face tank it :^)
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;
-            } else {cout << "Unexpected error";}
+            
+            //bonque
+            if (num_get == 1) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .2)) * 2;}
+            //Eviscerate
+            else if (num_get == 2) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 3;}
+            //Stab
+            else if (num_get == 3){damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2;} 
+            //Casted Punch. Will probably get around to an actual "cast" next commit.
+            //For now just face tank :^)
+            else if (num_get == 4){damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;} 
+            else {cout << "Unexpected error";}
+
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
             break;
         }
 
@@ -411,23 +448,17 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             int len = list_len(enemy->e_mage_atks);
             int num_get = get_rand_num(len);
             std::string ability = get_item(enemy->e_mage_atks, num_get);
-            if (num_get == 1) //standard attack case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = enemy->e_stats.INT + (enemy->e_stats.WIS * .6) * 2;
-            } else if (num_get == 2) //Fire case. "Dawg this mage calc is fire"
-            {                        //Sheen this is the 20th calc you've shown to class today
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = enemy->e_stats.INT + (enemy->e_stats.WIS * .4) * 3;
-            } else if (num_get == 3) //Water case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = enemy->e_stats.INT + (enemy->e_stats.WIS * .2) * 3;
-            } else if (num_get == 4) //Gust case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.INT + enemy->e_stats.DEX) * 3;
-            } else {cout << "Unexpected error" << endl;}
+            //bonk
+            if (num_get == 1) {damage = (enemy->e_stats.INT + (enemy->e_stats.WIS * .6)) * 2;} 
+            //fire
+            else if (num_get == 2) {damage = (enemy->e_stats.INT + (enemy->e_stats.WIS * .4)) * 3;} 
+            //water
+            else if (num_get == 3) {damage = (enemy->e_stats.INT + enemy->e_stats.WIS * .2) * 3;}
+            //gust
+            else if (num_get == 4){damage = (enemy->e_stats.INT + enemy->e_stats.WIS) * 3;} 
+            else {cout << "unexpected error" << endl;}
+
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
             break;
         }
 
@@ -437,19 +468,15 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             int num_get = get_rand_num(len);
             std::string ability = get_item(enemy->w_elemental_atks, num_get);
             
-            if (num_get == 1) //standard attack case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = enemy->e_stats.INT + (enemy->e_stats.WIS * .6) * 2;
-            } else if (num_get == 2) //Dowse case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = enemy->e_stats.INT + (enemy->e_stats.WIS * .6) * 3;
-            } else if (num_get == 3) //Torrent case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = enemy->e_stats.INT + (enemy->e_stats.WIS) * 3;
-            } else {cout << "unexpected error" << endl;}
+            //standard attack
+            if (num_get == 1) {damage = enemy->e_stats.INT + (enemy->e_stats.WIS * .6) * 2;}
+            //Dowse
+            else if (num_get == 2){damage = enemy->e_stats.INT + (enemy->e_stats.WIS * .6) * 3;}
+            //Torrent case
+            else if (num_get == 3){damage = (enemy->e_stats.INT + enemy->e_stats.WIS) * 3;} 
+            else {cout << "unexpected error" << endl;}
+
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
             break;
             }
 
@@ -459,19 +486,15 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             int num_get = get_rand_num(len);
             std::string ability = get_item(enemy->crab_atks, num_get);
 
-            if (num_get == 1) //Pincer attack case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = enemy->e_stats.STR + (enemy->e_stats.DEX * .8) * 2;
-            } else if (num_get == 2) //Pound and Toss case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = enemy->e_stats.STR + (enemy->e_stats.DEX * .6) * 3;
-            } else if (num_get == 3) //Water Torrent case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.INT + enemy->e_stats.WIS) * 3;
-            } else {cout << "unexpected error" << endl;}
+            //Pincer
+            if (num_get == 1){damage = enemy->e_stats.STR + (enemy->e_stats.DEX * .8) * 2;}
+            //Pound and Toss
+            else if (num_get == 2){damage = enemy->e_stats.STR + (enemy->e_stats.DEX * .6) * 3;} 
+            //Water Torrent
+            else if (num_get == 3){damage = (enemy->e_stats.INT + enemy->e_stats.WIS) * 3;}
+            else {cout << "unexpected error" << endl;}
+
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
             break; 
         }
 
@@ -480,24 +503,18 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             int len = list_len(enemy->wolf_atks);
             int num_get = get_rand_num(len);
             std::string ability = get_item(enemy->wolf_atks, num_get);
+            
+            //attack
+            if (num_get == 1) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 2;} 
+            //bite
+            else if (num_get == 2) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2;} 
+            //deadlier bite
+            else if (num_get == 3) {damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;}
+            //slash
+            else if (num_get == 4){damage = (enemy->e_stats.STR + (enemy->e_stats.DEX + 2)) * 3;} 
+            else {cout << "unexpected error" << endl;}
 
-            if (num_get == 1) //Standard attack case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 2;
-            } else if (num_get == 2) //Bite case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2;
-            } else if (num_get == 3) //Deadlier Bite case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;
-            } else if (num_get == 4) //Bite case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX + 2)) * 3;
-            } else {cout << "unexpected error" << endl;}
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
             break;
             }
         
@@ -506,52 +523,68 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             int len = list_len(enemy->drgn_atks);
             int num_get = get_rand_num(len);
             std::string ability = get_item(enemy->drgn_atks, num_get);
-            if (num_get == 1) //Standard attack case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 2;
-            } else if (num_get == 2) //Breathe Fire case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.INT + (enemy->e_stats.WIS * .4)) * 2;
-            } else if (num_get == 3) //Icy Breath case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.INT + enemy->e_stats.WIS) * 3;
-            } else if (num_get == 4) //Fly and Swipe case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX + 2)) * 3;
-            } else if (num_get == 5) //Chomp case
-            {
-                cout << "" << enemy->name << " attacks with: " << ability << endl;
-                damage = (enemy->e_stats.STR + (enemy->e_stats.DEX)) * 3;
-            } else {cout << "unexpected error" << endl;}
+
+            //standard attack
+            if (num_get == 1)
+            {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 2;} 
+            //breathe fire
+            else if (num_get == 2){damage = (enemy->e_stats.INT + (enemy->e_stats.WIS * .4)) * 2;}
+            //Icy Breathe
+            else if (num_get == 3){damage = (enemy->e_stats.INT + enemy->e_stats.WIS) * 3;}
+            //Fly and Swipe
+            else if (num_get == 4){damage = (enemy->e_stats.STR + (enemy->e_stats.DEX + 2)) * 3;} 
+            //Chomp
+            else if (num_get == 5){damage = (enemy->e_stats.STR + (enemy->e_stats.DEX)) * 3;}
+            else {cout << "unexpected error" << endl;}
+
+            cout << "" << enemy->name << " attacks with: " << ability << endl;
             break;
         }
         default:
         cout << "unexpected error" << endl;
         break;
-    }
+        }
     return damage;
 }
 
-int deal_damage(Enemy* enemy, int damage_dealt, int enemy_health)
+int deal_damage(Player* player, Enemy* enemy, int damage_dealt, int enemy_health)
 {
+    if (player->non_damage_used == true)
+        {
+            return enemy_health;
+        } else
+    {
     enemy_health -= damage_dealt;
     cout << "You dealt " << damage_dealt << " damage!" << endl;
+    cout << "-------------------------------------------" << endl;
+    }
     return enemy_health;
 }
-int take_damage(Player* player, int player_health, int damage_taken)
+int take_damage(Player* player, Enemy* enemy, int player_health, int damage_taken)
     {
-    player_health -= damage_taken;
-    cout << "You took " << damage_taken << " damage!" << endl;
-    return player_health;
+    if (enemy->non_damage_s_used == false)
+        {if (player->kind == PCLASSES::MAGE && player->ice_cubed) 
+        {
+            damage_taken = 0;
+            player_health += player->stats.HP;
+            if (player_health > player->stats.HP)
+            {player_health = player->stats.HP;}
+            cout << "You nullified the attack and healed yourself to full!\n" << 
+            "-------------------------------------------" << endl;
+        } else {
+        player_health -= damage_taken;
+        cout << "You took " << damage_taken << " damage!" << endl;}
+        cout << "-------------------------------------------" << endl;
     }
+    return player_health;
+}
+
+
 void pre_enc(Player* player, Enemy* enemy, Zone* zone)
 {
     get_enemy(player, enemy, zone);
     cout << "You have encountered a " << enemy->name << "!" << endl;
+    cout << "-------------------------------------------" << endl;
     get_enemy_stats(enemy);
     level_enemy(player, enemy);
     enemy->current_enemy_hp = enemy->e_stats.HP;
@@ -561,29 +594,40 @@ void encounter(Player* player, Enemy* enemy, Zone* zone)
 {
     while (player->is_alive && enemy->is_alive)
    {    
+        if (player->kind == PCLASSES::WARRIOR && enemy->current_enemy_hp <= enemy->e_stats.HP * .5)
+        {
+            enemy->ripe_for_execution = true;
+            cout << "Enemy is ripe for execution!\n" << "=========================================\n" << endl;
+        }
+        if (player->ice_cubed) {player->ice_cubed = false;}
+        player->non_damage_used = false;
+        enemy->non_damage_s_used = false;
         player->turn_taken = false;
         enemy->turn_taken = false;
         
         if (player->current_HP > 0 && player->turn_taken == false && enemy->current_enemy_hp > 0)
         {
-            int damage_dealt = calc_damage(player);
-            enemy->current_enemy_hp = deal_damage(enemy, damage_dealt, enemy->current_enemy_hp);
+            int damage_dealt = calc_damage(player, enemy);
+            enemy->current_enemy_hp = deal_damage(player, enemy, damage_dealt, enemy->current_enemy_hp);
             if (enemy->current_enemy_hp <= 0) // you killed the enemy to death
             {
                 enemy->current_enemy_hp = 0;
+                system("clear");
                 cout << "You defeated the " << enemy->name << "!" << endl;
+                cout << "-------------------------------------------" << endl;
                 enemy->is_alive = false;
                 level_up(player);
                 break;
             }
             cout << "" << enemy->name << "'s HP: " << enemy->current_enemy_hp << endl;
+            cout << "-------------------------------------------" << endl;
             player->turn_taken = true;
         }
 
         if (player->turn_taken == true && enemy->turn_taken == false && enemy->current_enemy_hp > 0)
         {
             int e_damage_dealt = calc_enemy_damage(player, enemy, zone);
-            player->current_HP = take_damage(player, player->current_HP, e_damage_dealt);
+            player->current_HP = take_damage(player, enemy, player->current_HP, e_damage_dealt);
             if (player->current_HP <= 0) //you died to death
             {
                 player->current_HP = 0;
