@@ -42,7 +42,7 @@ struct Player
     p_stats stats;
     p_stats new_stats;
     std::list<std::string> ability_list;
-    std::list<std::string> zone_list = {"Elwynn Forest", "Zoravia", "Greenguard"};
+    std::list<std::string> zone_list;
     ZONES current_zone;
     //ability stuff
     W_SKILLS w_ability;

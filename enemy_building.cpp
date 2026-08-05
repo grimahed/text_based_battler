@@ -305,9 +305,9 @@ en_stats level_enemy(Player* player, Enemy* enemy)
                 {
                     for (int i = 1; i != player->level; i++)
                     {
-                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.HP += 125;
                         enemy->e_stats.STR += get_rand_num(2);
-                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_stats.DEX += get_rand_num(3);
                         enemy->e_level = i;
                     }
                     break;
@@ -316,9 +316,7 @@ en_stats level_enemy(Player* player, Enemy* enemy)
                 {
                     for (int i = 1; i != player->level; i++)
                     {
-                        enemy->e_stats.HP += 75;
-                        enemy->e_stats.STR++;
-                        enemy->e_stats.DEX++;
+                        enemy->e_stats.HP += 125;
                         enemy->e_stats.INT += get_rand_num(2);
                         enemy->e_stats.WIS += get_rand_num(2);
                         enemy->e_level = i;
@@ -330,9 +328,9 @@ en_stats level_enemy(Player* player, Enemy* enemy)
                 {
                 for (int i = 1; i != player->level; i++)
                     {
-                        enemy->e_stats.HP += 75;
-                        enemy->e_stats.STR += get_rand_num(2);
-                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_stats.HP += 150;
+                        enemy->e_stats.STR += get_rand_num(3);
+                        enemy->e_stats.DEX += get_rand_num(3);
                         enemy->e_level = i;
                     }
                     break;
@@ -341,7 +339,7 @@ en_stats level_enemy(Player* player, Enemy* enemy)
                 {                    
                     for (int i = 1; i != player->level; i++)
                     {
-                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.HP += 100;
                         enemy->e_stats.STR += get_rand_num(2);
                         enemy->e_stats.DEX += get_rand_num(2);
                         enemy->e_stats.INT += get_rand_num(2);
@@ -355,8 +353,8 @@ en_stats level_enemy(Player* player, Enemy* enemy)
                 {
                    for (int i = 1; i != player->level; i++)
                     {
-                        enemy->e_stats.HP += 75;
-                        enemy->e_stats.INT += get_rand_num(2);
+                        enemy->e_stats.HP += 100;
+                        enemy->e_stats.INT += get_rand_num(3);
                         enemy->e_stats.WIS += get_rand_num(2);
                         enemy->e_level = i;
                     }
@@ -367,7 +365,7 @@ en_stats level_enemy(Player* player, Enemy* enemy)
                 {
                     for (int i = 1; i != player->level; i++)
                     {
-                        enemy->e_stats.HP += 75;
+                        enemy->e_stats.HP += 100;
                         enemy->e_stats.STR += get_rand_num(2);
                         enemy->e_stats.DEX += get_rand_num(2);
                         enemy->e_level = i;
@@ -380,8 +378,8 @@ en_stats level_enemy(Player* player, Enemy* enemy)
                     for (int i = 1; i != player->level; i++)
                     {
                         enemy->e_stats.HP += 75;
-                        enemy->e_stats.STR += get_rand_num(2);
-                        enemy->e_stats.DEX += get_rand_num(2);
+                        enemy->e_stats.STR += get_rand_num(3);
+                        enemy->e_stats.DEX += get_rand_num(3);
                         enemy->e_stats.INT += get_rand_num(2);
                         enemy->e_stats.WIS += get_rand_num(2);
                         enemy->e_level = i;

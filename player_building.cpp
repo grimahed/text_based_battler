@@ -13,12 +13,13 @@ using namespace std;
 
 std::string get_player_name()
 {
+    std::string name = "Grimahed";
     std::string input;
     std::string text_error = "Where's my valid TEXT";
     cout << "The default name is Grimahed, is that okay (y/n)?" << std::endl;
     std::getline(cin, input);
         if (input == "y" || input == "Y" || input == "yes") {
-            input = "Grimahed";
+            name = "Grimahed";
             cout << "Your name is: " << input << std::endl;
         } else if (input == "n" || input == "N" || input == "no")
         {
@@ -30,13 +31,14 @@ std::string get_player_name()
                 cout << "" << text_error << endl;
                 get_player_name();
             } else {
-                cout << "Your name is: " << input << "\n" << "----------------------------------" << "\n";
+                name = input;
+                cout << "Your name is: " << name << "\n" << "----------------------------------" << "\n";
             }
         } else {
             cout << "invalid input." << "\n================================\n";
             get_player_name();
         }
-    return input;
+    return name;
 }
 
 PCLASSES get_class(Player* player)
@@ -268,6 +270,9 @@ std::list<std::string> class_abilities(Player* player)
 ZONES get_zone(Player* player)
 {
     std::string input;
+    if (player->level < 10) {player->zone_list = {"Elwynn Forest", "Zoravia"};}
+        else {player->zone_list = {"Elwynn Forest", "Zoravia", "Greenguard"};}
+    
     cout << "Choose a zone from: " << print_list(player->zone_list) << endl; //this will stay numeric
     std::cout << "" << std::endl;;                                                     
     std::getline(cin, input);

@@ -84,6 +84,19 @@ std::string get_item(std::list<std::string> list, int i)
     return *in;
 }
 
+int get_int(std::list<int> list, int i)
+{
+    if (list.empty())
+    {
+        cout << "Can't get data from an empty or nothingburger list" << endl;
+    }
+    std::list<int>::iterator in = list.begin();
+    for (int j = 0; j + 1 < i; j++)
+    {
+        ++in;
+    };
+    return *in;
+}
 std::string make_lower(std::string str)
 {
     std::transform(str.begin(), str.end(), str.begin(), 

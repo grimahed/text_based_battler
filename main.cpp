@@ -17,8 +17,7 @@ int main() {
     Zone* zone = new Zone();
     std::string input;
     cout << "=========================================" << endl;
-    cout << "While playing you can use alphanumeric values for input in their respective cases.\n"
-    << "Though bear in mind you can only use numeric for zone selection and the post encounter menu" << endl;
+    cout << "While playing you can will use alphanumeric values as input in their respective cases.\n" << endl;
     cout << "=========================================" << endl;
    
     //all player stuff

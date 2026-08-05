@@ -34,16 +34,24 @@ struct Enemy
     bool is_alive = true;
     bool turn_taken;
     bool ripe_for_execution = false;
+    bool is_stunned = false;
     bool has_dot = false;
+    bool is_cubed = false;
     bool non_damage_s_used = false;
+
     en_stats e_stats;
-    int current_enemy_hp;
     ENEMIES type;
     std::string name;
     std::list<std::string> ability_list;
+
     int e_level = 1;
-
-
+    int current_enemy_hp;
+    int dot_dmg;
+    //counters
+    int dot_count;
+    int stun_count;
+    int cubed_counter;
+    
     //now it's not eye bleed material
     std::list<std::string> wolf_atks = {"Attack", "Bite", "Deadlier Bite", "Slash"};
     std::list<std::string> big_wolf_atks = {"Attack", "Deadlier Bite", "Gouge", "Shred"};

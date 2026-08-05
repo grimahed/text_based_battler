@@ -212,7 +212,6 @@ P_SKILLS get_priest_skill_used(Player* player)
     return player->p_ability;
 }
 
-
 int calc_damage(Player* player, Enemy* enemy)
 {
     int damage = 0;
@@ -242,7 +241,11 @@ int calc_damage(Player* player, Enemy* enemy)
                 //Now with code to fulfill your murder hobo dopamine hits!
                 case REND:
                     damage = (player->stats.STR + (player->stats.DEX * .8)) * 2;
-                    break; //Will be a DoT. another IFYKYK.
+                    enemy->dot_dmg = (int)(player->stats.STR + (player->stats.DEX / 2) * 1.5);
+                    enemy->has_dot = true;
+                    enemy->dot_count = 2;
+                    break;
+
                 default:
                     cout << "unexpected error. oopsie~" << endl;
                     break;
@@ -255,14 +258,21 @@ int calc_damage(Player* player, Enemy* enemy)
             {
                 case ICE_BOLT:
                 damage = (player->stats.INT + player->stats.WIS) * 2;
+                cout << "" << enemy->name << " is weaker to fire damage temporarily!" << endl;
+                enemy->is_cubed = true;
+                enemy->cubed_counter = 2;
                 break;
 
                 case FIREBLAST:
                 damage = (player->stats.INT + (player->stats.WIS * .6)) * 3;
+                if (enemy->is_cubed) {damage *= 2;}
                 break;
                 
                 case THUNDER:
                 damage = (player->stats.INT + (player->stats.WIS * .8)) * 2;
+                enemy->dot_dmg = (int)(player->stats.INT + (player->stats.WIS / 2) * 1.5);
+                enemy->has_dot = true;
+                enemy->dot_count = 3;
                 break;
 
                 case ICE_BLOCK:
@@ -286,6 +296,9 @@ int calc_damage(Player* player, Enemy* enemy)
                            //yeah the idea got scrapped lol. Feel free to do it yourself though. Simple for loop should do it.
                 case KICK:
                     damage = (player->stats.DEX + (player->stats.STR * .2)) * 2;
+                    cout << "" << enemy->name << " is stunned temporarily!" << endl;
+                    enemy->is_stunned = true;
+                    enemy->stun_count = 1;
                     break; //yes this will be a stun. Again, IFYKYK.
                 
                 case SABER_SLASH:
@@ -294,7 +307,10 @@ int calc_damage(Player* player, Enemy* enemy)
                 
                 case POISON_BOMB:
                     damage = (player->stats.DEX + (player->stats.STR * .8)) * 2;
-                    break; //anotha DoT
+                    enemy->dot_dmg = (int)(player->stats.DEX + (player->stats.STR / 2) * 1.5);
+                    enemy->has_dot = true;
+                    enemy->dot_count = 4;
+                    break; //anotha one
                 default:
                     cout << "unexpected error. oopsie~" << endl;
                     break;
@@ -311,7 +327,10 @@ int calc_damage(Player* player, Enemy* enemy)
                 
                 case BONE_DECAY:
                     damage = (player->stats.INT + (player->stats.WIS * .8)) * 2;
-                    break; //DoT
+                    enemy->dot_dmg = (int)(player->stats.INT + (player->stats.WIS / 2) * 1.5);
+                    enemy->has_dot = true;
+                    enemy->dot_count = 4;
+                    break;
                 
                 case RAIN_OF_FIRE:
                     damage = (player->stats.INT + player->stats.WIS) * 2;
@@ -344,10 +363,16 @@ int calc_damage(Player* player, Enemy* enemy)
                 
                 case DIA:
                     damage = (player->stats.WIS + (player->stats.INT * .8)) * 2;
+                    enemy->dot_dmg = (int)(player->stats.WIS + (player->stats.INT / 2) * 1.5);
+                    enemy->has_dot = true;
+                    enemy->dot_count = 3;
                     break; //DoT
                 
                 case HOLY: // I was going to make multi mob encounters possible, and this aoe. Maybe down the road.
                     damage = (player->stats.WIS + (player->stats.INT * .4)) * 2; //but to lower the scope, not for now.
+                    cout << "" << enemy->name << " is stunned temporarily!" << endl;
+                    enemy->is_stunned = true;
+                    enemy->stun_count = 1;
                     break; //feel free to add them yourself though! Till then this is single target.
                 
                 case AERO:
@@ -364,10 +389,6 @@ int calc_damage(Player* player, Enemy* enemy)
     }
     return (int)damage;
 }
-
-//Healing will be done in separate funcs and so it's easier to debug
-//and also easier to hunt it down, less eye strain.
-//basically, it gets made then inserted into here.
 
 int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
 {
@@ -396,6 +417,8 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             cout << "" << enemy->name << " Heals with: " << ability << endl;
             enemy->non_damage_s_used = true;
             enemy->current_enemy_hp += enemy->e_stats.HP * .4;
+            if (enemy->current_enemy_hp > enemy->e_stats.HP) //HP regulation
+            {enemy->current_enemy_hp = enemy->e_stats.HP;}
             cout << "The " << enemy->name << "'s HP is now " << enemy->current_enemy_hp << endl;
             cout << "-------------------------------------------" << endl;
 
@@ -429,14 +452,13 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
             std::string ability = get_item(enemy->bandit_atks, num_get);
             
             //bonque
-            if (num_get == 1) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .2)) * 2;}
+            if (num_get == 1) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .6)) * 2;}
             //Eviscerate
-            else if (num_get == 2) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 3;}
+            else if (num_get == 2) {damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;}
             //Stab
-            else if (num_get == 3){damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2;} 
-            //Casted Punch. Will probably get around to an actual "cast" next commit.
-            //For now just face tank :^)
-            else if (num_get == 4){damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;} 
+            else if (num_get == 3) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2.5;} 
+            //Not so casted punch
+            else if (num_get == 4) {damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;} 
             else {cout << "Unexpected error";}
 
             cout << "" << enemy->name << " attacks with: " << ability << endl;
@@ -544,7 +566,7 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
         cout << "unexpected error" << endl;
         break;
         }
-    return damage;
+    return (int)damage;
 }
 
 int deal_damage(Player* player, Enemy* enemy, int damage_dealt, int enemy_health)
@@ -560,6 +582,24 @@ int deal_damage(Player* player, Enemy* enemy, int damage_dealt, int enemy_health
     }
     return enemy_health;
 }
+
+int place_dot(Player* player, Enemy* enemy, int dot_dmg, int enemy_health)
+{
+    if (enemy->has_dot && enemy->dot_count > 0)
+    {
+        enemy_health -= dot_dmg;
+        cout << "Your DoT dealt: " << dot_dmg << " damage!" << endl;
+        cout << "-------------------------------------------" << endl;
+    }
+    return enemy_health;
+}
+
+void print_total_dmg(int dot_dmg, int damage_dealt, Enemy* enemy)
+{
+    cout << "Total damage to " << enemy->name << ": " << damage_dealt + dot_dmg << endl;
+    cout << "-------------------------------------------" << endl;
+}
+
 int take_damage(Player* player, Enemy* enemy, int player_health, int damage_taken)
     {
     if (enemy->non_damage_s_used == false)
@@ -577,67 +617,5 @@ int take_damage(Player* player, Enemy* enemy, int player_health, int damage_take
         cout << "-------------------------------------------" << endl;
     }
     return player_health;
-}
-
-
-void pre_enc(Player* player, Enemy* enemy, Zone* zone)
-{
-    get_enemy(player, enemy, zone);
-    cout << "You have encountered a " << enemy->name << "!" << endl;
-    cout << "-------------------------------------------" << endl;
-    get_enemy_stats(enemy);
-    level_enemy(player, enemy);
-    enemy->current_enemy_hp = enemy->e_stats.HP;
-}
-
-void encounter(Player* player, Enemy* enemy, Zone* zone)
-{
-    while (player->is_alive && enemy->is_alive)
-   {    
-        if (player->kind == PCLASSES::WARRIOR && enemy->current_enemy_hp <= enemy->e_stats.HP * .5)
-        {
-            enemy->ripe_for_execution = true;
-            cout << "Enemy is ripe for execution!\n" << "=========================================\n" << endl;
-        }
-        if (player->ice_cubed) {player->ice_cubed = false;}
-        player->non_damage_used = false;
-        enemy->non_damage_s_used = false;
-        player->turn_taken = false;
-        enemy->turn_taken = false;
-        
-        if (player->current_HP > 0 && player->turn_taken == false && enemy->current_enemy_hp > 0)
-        {
-            int damage_dealt = calc_damage(player, enemy);
-            enemy->current_enemy_hp = deal_damage(player, enemy, damage_dealt, enemy->current_enemy_hp);
-            if (enemy->current_enemy_hp <= 0) // you killed the enemy to death
-            {
-                enemy->current_enemy_hp = 0;
-                system("clear");
-                cout << "You defeated the " << enemy->name << "!" << endl;
-                cout << "-------------------------------------------" << endl;
-                enemy->is_alive = false;
-                level_up(player);
-                break;
-            }
-            cout << "" << enemy->name << "'s HP: " << enemy->current_enemy_hp << endl;
-            cout << "-------------------------------------------" << endl;
-            player->turn_taken = true;
-        }
-
-        if (player->turn_taken == true && enemy->turn_taken == false && enemy->current_enemy_hp > 0)
-        {
-            int e_damage_dealt = calc_enemy_damage(player, enemy, zone);
-            player->current_HP = take_damage(player, enemy, player->current_HP, e_damage_dealt);
-            if (player->current_HP <= 0) //you died to death
-            {
-                player->current_HP = 0;
-                player->is_alive = false;
-                cout << "You died! Game over." << endl;
-                exit(1);
-            }
-            cout << "" << player->name << "'s HP: " << player->current_HP << endl;
-            enemy->turn_taken = true;
-        }
-    }
 }
 #endif
