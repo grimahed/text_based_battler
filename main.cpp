@@ -17,11 +17,11 @@ int main() {
     Zone* zone = new Zone();
     std::string input;
     cout << "=========================================" << endl;
-    cout << "While playing you can will use alphanumeric values as input in their respective cases.\n" << endl;
+    cout << "While playing you can use alphanumeric values as input in their respective cases.\n" << endl;
     cout << "=========================================" << endl;
    
     //all player stuff
-    player->name = get_player_name(); //starting the instance of the player object. Of course, starts with the name.
+    get_player_name(player); //starting the instance of the player object. Of course, starts with the name.
     cout << "=========================================" << endl;
     get_class(player);
     get_stats(player);

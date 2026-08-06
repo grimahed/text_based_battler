@@ -2,6 +2,9 @@
 #define HELPERS_CPP
 
 #include <iostream> 
+#include "PLAYER.h"
+#include "ENEMIES.h"
+#include <stdexcept>
 #include <optional>
 #include <string>
 #include <string_view>

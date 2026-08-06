@@ -36,6 +36,7 @@ struct Enemy
     bool ripe_for_execution = false;
     bool is_stunned = false;
     bool has_dot = false;
+    bool has_burns = false;
     bool is_cubed = false;
     bool non_damage_s_used = false;
 
@@ -47,8 +48,10 @@ struct Enemy
     int e_level = 1;
     int current_enemy_hp;
     int dot_dmg;
+    int burn_dmg;
     //counters
     int dot_count;
+    int brn_count;
     int stun_count;
     int cubed_counter;
     

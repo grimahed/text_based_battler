@@ -23,14 +23,13 @@ W_SKILLS get_warrior_skill_used(Player* player, Enemy* enemy)
         cout << "Unexpected error, reselect the class" << endl;
         get_class(player);
     }
-    int rand_num = get_rand_num(4);
+    int rand_num = get_rand_num(5);
     if (enemy->ripe_for_execution || rand_num == 3)
     {
         class_abilities(player);
     } else {
-        player->ability_list = {"Mortal Strike", "Overpower", "Rend"};
+       player->ability_list = {"Mortal Strike", "Overpower", "Rend"};
     }
-
 
     //ability selection
     cout << "Select an ability to use from: " << print_list(player->ability_list) << "\n" << "=========================================\n";
@@ -232,9 +231,14 @@ int calc_damage(Player* player, Enemy* enemy)
                     break;                              
                 
                 case OVERPOWER:
-                    damage = (player->stats.STR + (player->stats.DEX / 3)) * 3;
+                {   damage = (player->stats.STR + (player->stats.DEX / 3)) * 3;
+                    int rand_numba = get_rand_num(4);
+                    if (rand_numba == 1)
+                    {enemy->ripe_for_execution = true;}
+                    if (enemy->ripe_for_execution)
+                    {cout << "overpower procced execute!" << endl;}
                     break;
-                
+                }
                 case EXECUTE:
                     damage = (player->stats.STR + player->stats.DEX) * 7;
                     break;
@@ -322,22 +326,39 @@ int calc_damage(Player* player, Enemy* enemy)
             switch (player->wl_ability)
             {
                 case SHADOW_BOLT:
-                    damage = (player->stats.INT + (player->stats.WIS / 2)) * 3;
+                    damage = (player->stats.INT + (player->stats.WIS)) * 2;
+                    player->s_bolt_cnt++;
+
+                    if (player->s_bolt_cnt == 2) 
+                    {
+                        player->sd_buff_rdy = true;
+                        cout << "Your next summon demon now does double damage!" << endl;
+                    }
                     break;
                 
                 case BONE_DECAY:
-                    damage = (player->stats.INT + (player->stats.WIS * .8)) * 2;
-                    enemy->dot_dmg = (int)(player->stats.INT + (player->stats.WIS / 2) * 1.5);
+                    damage = (player->stats.INT + (player->stats.WIS * .8)) * 3;
+                    enemy->dot_dmg = (int)(player->stats.INT + player->stats.WIS) * 1.5;
                     enemy->has_dot = true;
                     enemy->dot_count = 4;
                     break;
                 
                 case RAIN_OF_FIRE:
-                    damage = (player->stats.INT + player->stats.WIS) * 2;
+                    damage = (player->stats.INT + player->stats.WIS) * 3;
+                    enemy->has_burns = true;
+                    enemy->burn_dmg = (int)(player->stats.INT + (player->stats.WIS) * 1.5);
+                    enemy->brn_count = 3;
                     break;
                 
                 case SUMMON_DEMON:
+                    cout << "You summon a powerful demon!" << endl; //but it's the blueberry from WoW, they've been hitting the gym.
                     damage = (player->stats.INT + (player->stats.WIS)) * 5;
+                    if (player->sd_buff_rdy) 
+                    {
+                        damage *= 2; 
+                        player->sd_buff_rdy = false; 
+                        player->s_bolt_cnt = 0;
+                    }
                     break;
                 default:
                     cout << "unexpected error. oopsie~" << endl;
@@ -583,7 +604,7 @@ int deal_damage(Player* player, Enemy* enemy, int damage_dealt, int enemy_health
     return enemy_health;
 }
 
-int place_dot(Player* player, Enemy* enemy, int dot_dmg, int enemy_health)
+int place_dot(Player* player, Enemy* enemy, int dot_dmg, int brn_dmg, int enemy_health)
 {
     if (enemy->has_dot && enemy->dot_count > 0)
     {
@@ -591,12 +612,19 @@ int place_dot(Player* player, Enemy* enemy, int dot_dmg, int enemy_health)
         cout << "Your DoT dealt: " << dot_dmg << " damage!" << endl;
         cout << "-------------------------------------------" << endl;
     }
+
+    if (enemy->has_burns && enemy->brn_count > 0)
+    {
+        enemy_health -= brn_dmg;
+        cout << "Enemy's burns dealt: " << brn_dmg << " damage!" << endl;
+        cout << "-------------------------------------------" << endl;
+    }
     return enemy_health;
 }
 
-void print_total_dmg(int dot_dmg, int damage_dealt, Enemy* enemy)
+void print_total_dmg(int dot_dmg, int brn_dmg, int damage_dealt, Enemy* enemy)
 {
-    cout << "Total damage to " << enemy->name << ": " << damage_dealt + dot_dmg << endl;
+    cout << "Total damage to " << enemy->name << ": " << damage_dealt + dot_dmg + brn_dmg << endl;
     cout << "-------------------------------------------" << endl;
 }
 

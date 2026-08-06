@@ -11,51 +11,22 @@
 
 void pre_enc(Player* player, Enemy* enemy, Zone* zone)
 {
-    //you can now go to a bigger danger
-    if (player->level == 10) 
-    {
-        cout << "You have unlocked the Greenguard zone!\n\n"
-                << "Would you like to swap zones? (y/n)" << endl;
-
-        std::getline(cin, player->input);
-        std::string shrinka_da_text = make_lower(player->input);
-        if (only_whitespace(player->input))
-        {cout << "Need an answer bruv" << endl; pre_enc(player, enemy, zone);} //GARY, THERE'S A BOMB STRAPPED TO MY CHEST, AND IT'LL EXPLODE UNLESS YOU GIVE ME MY TEXT.
-        if (shrinka_da_text == "y") 
-        {
-            get_zone(player); 
-            get_enemy(player, enemy, zone);
-            cout << "You have encountered a " << enemy->name << "!" << endl;
-            cout << "-------------------------------------------" << endl;
-            get_enemy_stats(enemy);
-            level_enemy(player, enemy);
-            enemy->current_enemy_hp = enemy->e_stats.HP;
-        }
-        else if (shrinka_da_text == "n")
-        {
-            get_enemy(player, enemy, zone);
-            cout << "You have encountered a " << enemy->name << "!" << endl;
-            cout << "-------------------------------------------" << endl;
-            get_enemy_stats(enemy);
-            level_enemy(player, enemy);
-            enemy->current_enemy_hp = enemy->e_stats.HP;
-        }
-    } else
-    {
-        get_enemy(player, enemy, zone);
-        cout << "You have encountered a " << enemy->name << "!" << endl;
-        cout << "-------------------------------------------" << endl;
-        get_enemy_stats(enemy);
-        level_enemy(player, enemy);
-        enemy->current_enemy_hp = enemy->e_stats.HP;
-    }
+    get_enemy(player, enemy, zone);
+    cout << "You have encountered a " << enemy->name << "!" << endl;
+    cout << "-------------------------------------------" << endl;
+    get_enemy_stats(enemy);
+    level_enemy(player, enemy);
+    enemy->current_enemy_hp = enemy->e_stats.HP;
+    
 }
 
 void encounter(Player* player, Enemy* enemy, Zone* zone)
 {
+    player->s_bolt_cnt = 0; //resetting buff count to zero
+    enemy->ripe_for_execution = false; //making sure this doesn't linger
     while (player->is_alive && enemy->is_alive)
    {    
-        if (player->kind == PCLASSES::WARRIOR && enemy->current_enemy_hp <= enemy->e_stats.HP * .5)
+        if (player->kind == PCLASSES::WARRIOR && enemy->current_enemy_hp <= (int)enemy->e_stats.HP * .35)
         {
             enemy->ripe_for_execution = true;
             cout << "Enemy is ripe for execution!\n" << "=========================================\n" << endl;
@@ -66,6 +37,9 @@ void encounter(Player* player, Enemy* enemy, Zone* zone)
 
         if (enemy->dot_count > 0) {enemy->dot_count--;}
         else if (enemy->dot_count == 0) {enemy->has_dot = false; enemy->dot_dmg = 0;}
+
+        if (enemy->brn_count > 0) {enemy->brn_count--;}
+        else if (enemy->brn_count == 0) {enemy->has_burns = false; enemy->burn_dmg = 0;}
 
         if (enemy->stun_count > 0) {enemy->stun_count--;}
         else if (enemy->stun_count <= 0) {enemy->is_stunned = false;}
@@ -85,12 +59,14 @@ void encounter(Player* player, Enemy* enemy, Zone* zone)
             int damage_dealt = calc_damage(player, enemy);
 
             enemy->current_enemy_hp = deal_damage(player, enemy, damage_dealt, enemy->current_enemy_hp);
-            enemy->current_enemy_hp = place_dot(player, enemy, enemy->dot_dmg, enemy->current_enemy_hp);
-            print_total_dmg(enemy->dot_dmg, damage_dealt, enemy);
-            if (enemy->current_enemy_hp <= 0) // you killed the enemy to death
+            enemy->current_enemy_hp = place_dot(player, enemy, enemy->dot_dmg, enemy->burn_dmg, enemy->current_enemy_hp);
+            print_total_dmg(enemy->dot_dmg, enemy->burn_dmg, damage_dealt, enemy);
+            
+            // you killed the enemy to death
+            if (enemy->current_enemy_hp <= 0)
             {
                 enemy->current_enemy_hp = 0;
-                system("clear");
+                std::cout << "\033[2J\033[1;1H";
                 cout << "You defeated the " << enemy->name << "!" << endl;
                 cout << "-------------------------------------------" << endl;
                 enemy->is_alive = false;
@@ -106,11 +82,19 @@ void encounter(Player* player, Enemy* enemy, Zone* zone)
         {
             int e_damage_dealt = calc_enemy_damage(player, enemy, zone);
             player->current_HP = take_damage(player, enemy, player->current_HP, e_damage_dealt);
-            if (player->current_HP <= 0) //you died to death
+
+            //you died to death
+            if (player->current_HP <= 0)
             {
                 player->current_HP = 0;
                 player->is_alive = false;
+                std::cout << "\033[2J\033[1;1H";
+                cout << "You took " << e_damage_dealt << " damage!\n";
+                cout << "" << enemy->name << "'s HP: " << enemy->current_enemy_hp << endl;
+                cout << "" << player->name << "'s HP: " << player->current_HP << endl;
                 cout << "You died! Game over." << endl;
+                delete player;
+                player = nullptr;
                 exit(1);
             }
             cout << "" << enemy->name << "'s HP: " << enemy->current_enemy_hp << endl;
@@ -130,7 +114,14 @@ void game_loop(Player* player, Enemy* enemy, Zone* zone)
     {
         //back to business
         cout << "Current HP: " << player->current_HP << "\n-------------------------------------------" << endl;
-        cout << "Choose an option between:\n (1) Continue | (2) Be healed by a Priest and continue | (3) exit the game"
+        if (player->level == 10) 
+    {
+        player->GG_unlocked = true;
+        cout << "You have unlocked the Greenguard zone!\n\n" << "Beware the dragon...\n" << "=========================================" << endl;
+    
+    }
+    
+        cout << "Choose an option between:\n (1) Continue | (2) Be healed by a Priest and continue | (3) Be healed and swap Zones | (4) exit the game"
                 << "\n=========================================\n" << endl;
         std::cout << "" << endl;
         std::getline(cin, player->input);
@@ -140,12 +131,13 @@ void game_loop(Player* player, Enemy* enemy, Zone* zone)
         } else if (player->input == "1")
         {
             delete enemy;
+            enemy = nullptr;
             Enemy* enemy = new Enemy();
-            system("clear");
+            std::cout << "\033[2J\033[1;1H";;
             game_loop(player, enemy, zone);
         } else if (player->input == "2")
         {
-            system("clear");
+            std::cout << "\033[2J\033[1;1H";;
             player->current_HP += player->stats.HP / .8;
             if (player->current_HP > player->stats.HP)
             {
@@ -153,11 +145,27 @@ void game_loop(Player* player, Enemy* enemy, Zone* zone)
                 cout << "A priest heals you, you now have " << player->current_HP << "HP\n"
                 << "=========================================\n" << endl;
                 delete enemy;
+                enemy = nullptr;
                 Enemy* enemy = new Enemy();
                 player->ice_cubed = false;
                 game_loop(player, enemy, zone);
+            } else if  (player->input == "3")
+            {
+                get_zone(player);
+                std::cout << "\033[2J\033[1;1H";;
+                player->current_HP += player->stats.HP / .8;
+                if (player->current_HP > player->stats.HP)
+                {
+                    player->current_HP = player->stats.HP;}
+                    cout << "A priest heals you, you now have " << player->current_HP << "HP\n"
+                    << "=========================================\n" << endl;
+                    delete enemy;
+                    enemy = nullptr;
+                    Enemy* enemy = new Enemy();
+                    player->ice_cubed = false;
+                    game_loop(player, enemy, zone);
             }
-                else if (player->input == "3"){exit(1);
+                else if (player->input == "4"){exit(1);
             } else {cout << "invalid input" << endl;}
         }
     }

@@ -34,8 +34,13 @@ struct Player
     bool turn_taken;
     bool ice_cubed = false;
     bool non_damage_used = false;
+    bool GG_unlocked = false;
+    bool sd_buff_rdy = false;
+    
     int level = 1;
     int current_HP;
+    int s_bolt_cnt;
+
     std::string input;
     std::string name;
     PCLASSES kind;

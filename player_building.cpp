@@ -11,16 +11,16 @@
 using namespace std;
 
 
-std::string get_player_name()
+std::string get_player_name(Player* player)
 {
-    std::string name = "Grimahed";
+    player->name = "Grimahed";
     std::string input;
     std::string text_error = "Where's my valid TEXT";
     cout << "The default name is Grimahed, is that okay (y/n)?" << std::endl;
     std::getline(cin, input);
         if (input == "y" || input == "Y" || input == "yes") {
-            name = "Grimahed";
-            cout << "Your name is: " << input << std::endl;
+            player->name = "Grimahed";
+            cout << "Your name is: " << player->name << std::endl;
         } else if (input == "n" || input == "N" || input == "no")
         {
         std::cout << "Enter the name for your character: ";
@@ -29,16 +29,16 @@ std::string get_player_name()
             if (only_whitespace(input))
             {
                 cout << "" << text_error << endl;
-                get_player_name();
+                get_player_name(player);
             } else {
-                name = input;
-                cout << "Your name is: " << name << "\n" << "----------------------------------" << "\n";
+                player->name = input;
+                cout << "Your name is: " << player->name << "\n" << "----------------------------------" << "\n";
             }
         } else {
             cout << "invalid input." << "\n================================\n";
-            get_player_name();
+            get_player_name(player);
         }
-    return name;
+    return player->name;
 }
 
 PCLASSES get_class(Player* player)
@@ -89,7 +89,7 @@ p_stats get_stats(Player* player)
             break;
 
         case MAGE:
-            player->stats.HP = 275;
+            player->stats.HP = 300;
             player->stats.STR = 9;
             player->stats.DEX = 9;
             player->stats.INT = 15;
@@ -113,7 +113,7 @@ p_stats get_stats(Player* player)
             break;
 
         case PRIEST:
-            player->stats.HP = 250;
+            player->stats.HP = 275;
             player->stats.STR = 8;
             player->stats.DEX = 10;
             player->stats.INT = 10;
@@ -203,7 +203,7 @@ p_stats level_up(Player* player)
     switch (player->kind)
     {
         case WARRIOR:
-            player->stats.HP += 100;
+            player->stats.HP += 125;
             player->stats.STR += get_rand_num(3);
             player->stats.DEX += get_rand_num(2);
             break;
@@ -222,8 +222,8 @@ p_stats level_up(Player* player)
         
         case WARLOCK:
             player->stats.HP += 75;
-            player->stats.INT += get_rand_num(3);
-            player->stats.WIS += get_rand_num(2);
+            player->stats.INT += get_rand_num(4);
+            player->stats.WIS += get_rand_num(3);
             break;
         case PRIEST:
             player->stats.HP += 75;
@@ -237,6 +237,7 @@ p_stats level_up(Player* player)
 
     return player->stats;
 }
+
 std::list<std::string> class_abilities(Player* player)
 {
 
@@ -269,6 +270,7 @@ std::list<std::string> class_abilities(Player* player)
 
 ZONES get_zone(Player* player)
 {
+    using enum ZONES;
     std::string input;
     if (player->level < 10) {player->zone_list = {"Elwynn Forest", "Zoravia"};}
         else {player->zone_list = {"Elwynn Forest", "Zoravia", "Greenguard"};}
@@ -278,15 +280,15 @@ ZONES get_zone(Player* player)
     std::getline(cin, input);
     int num_imput = 0;                                         
     if (input == "1"){
-        player->current_zone = ZONES::ELWYNN_FOREST;
+        player->current_zone = ELWYNN_FOREST;
         cout << "=========================================" << endl;
         cout << "Current Zone: " << get_item(player->zone_list, 0) << "\n" << endl;
         return player->current_zone;
     } else if (input == "2") {
-        player->current_zone = ZONES::ZORAVIA;
+        player->current_zone = ZORAVIA;
         int num_input = std::stoi(input);
-    } else if (input == "3") {
-        player->current_zone = ZONES::GREENGUARD;
+    } else if (player->GG_unlocked && input == "3") {
+        player->current_zone = GREENGUARD;
         int num_input = std::stoi(input);
     } 
     else {
