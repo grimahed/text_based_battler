@@ -543,17 +543,17 @@ int calc_enemy_damage(Player* player, Enemy* enemy, Zone* zone)
 
         case FROGZARD:
         {
-            int len = list_len(enemy->wolf_atks);
+            int len = list_len(enemy->frogzard_atks);
             int num_get = get_rand_num(len);
-            std::string ability = get_item(enemy->wolf_atks, num_get);
+            std::string ability = get_item(enemy->frogzard_atks, num_get);
             
             //attack
-            if (num_get == 1) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .8)) * 2;} 
-            //bite
-            else if (num_get == 2) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX * .4)) * 2;} 
+            if (num_get == 1) {damage = (enemy->e_stats.STR + (enemy->e_stats.DEX *.8)) * 2;} 
             //deadlier bite
+            else if (num_get == 2) {damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 2;} 
+            //gouge
             else if (num_get == 3) {damage = (enemy->e_stats.STR + enemy->e_stats.DEX) * 3;}
-            //slash
+            //shred
             else if (num_get == 4){damage = (enemy->e_stats.STR + (enemy->e_stats.DEX + 2)) * 3;} 
             else {cout << "unexpected error" << endl;}
 

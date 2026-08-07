@@ -108,10 +108,13 @@ void game_loop(Player* player, Enemy* enemy, Zone* zone)
 {
     //I mean, the game just started, there's no way for you to be dead yet.
     //No I'm not counting modifying the code yourself as an exception to that logic.
-    pre_enc(player, enemy, zone);
-    encounter(player, enemy, zone);
     while (player->is_alive)
     {
+        Enemy* enemy = new Enemy();
+        player->ice_cubed = false;
+
+        pre_enc(player, enemy, zone);
+        encounter(player, enemy, zone);
         //back to business
         cout << "Current HP: " << player->current_HP << "\n-------------------------------------------" << endl;
         if (player->level == 10) 
@@ -134,7 +137,6 @@ void game_loop(Player* player, Enemy* enemy, Zone* zone)
             enemy = nullptr;
             Enemy* enemy = new Enemy();
             std::cout << "\033[2J\033[1;1H";;
-            game_loop(player, enemy, zone);
         } else if (player->input == "2")
         {
             std::cout << "\033[2J\033[1;1H";;
@@ -146,9 +148,6 @@ void game_loop(Player* player, Enemy* enemy, Zone* zone)
                 << "=========================================\n" << endl;
                 delete enemy;
                 enemy = nullptr;
-                Enemy* enemy = new Enemy();
-                player->ice_cubed = false;
-                game_loop(player, enemy, zone);
             } else if  (player->input == "3")
             {
                 get_zone(player);
@@ -161,9 +160,6 @@ void game_loop(Player* player, Enemy* enemy, Zone* zone)
                     << "=========================================\n" << endl;
                     delete enemy;
                     enemy = nullptr;
-                    Enemy* enemy = new Enemy();
-                    player->ice_cubed = false;
-                    game_loop(player, enemy, zone);
             }
                 else if (player->input == "4"){exit(1);
             } else {cout << "invalid input" << endl;}

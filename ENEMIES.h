@@ -57,7 +57,7 @@ struct Enemy
     
     //now it's not eye bleed material
     std::list<std::string> wolf_atks = {"Attack", "Bite", "Deadlier Bite", "Slash"};
-    std::list<std::string> big_wolf_atks = {"Attack", "Deadlier Bite", "Gouge", "Shred"};
+    std::list<std::string> frogzard_atks = {"Attack", "Deadlier Bite", "Gouge", "Shred"};
     std::list<std::string> e_mage_atks = {"Bonk", "Fire", "Water", "Gust"};
     std::list<std::string> w_elemental_atks = {"Water", "Dowse", "Torrent"};
     std::list<std::string> murloc_abilities = {"Attack", "Water", "Cure"}; //Gonna be a possible menace just like in classic!
